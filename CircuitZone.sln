@@ -5,6 +5,10 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircuitZone", "CircuitZone\CircuitZone.csproj", "{CEC9F344-A70F-479B-9F4F-D435010A5150}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircuitZone.Shared", "CircuitZone.Shared\CircuitZone.Shared.csproj", "{016F986D-498A-467F-8CBE-F175C6DFB768}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircuitZoneWebApp", "CircuitZoneWebApp\CircuitZoneWebApp.csproj", "{60CE0581-BC8B-4E7D-994F-82555AEA3F2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{CEC9F344-A70F-479B-9F4F-D435010A5150}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEC9F344-A70F-479B-9F4F-D435010A5150}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEC9F344-A70F-479B-9F4F-D435010A5150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{016F986D-498A-467F-8CBE-F175C6DFB768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{016F986D-498A-467F-8CBE-F175C6DFB768}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{016F986D-498A-467F-8CBE-F175C6DFB768}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{016F986D-498A-467F-8CBE-F175C6DFB768}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60CE0581-BC8B-4E7D-994F-82555AEA3F2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60CE0581-BC8B-4E7D-994F-82555AEA3F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60CE0581-BC8B-4E7D-994F-82555AEA3F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60CE0581-BC8B-4E7D-994F-82555AEA3F2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
