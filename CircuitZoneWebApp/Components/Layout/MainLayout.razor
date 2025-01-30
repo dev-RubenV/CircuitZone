@@ -1,35 +1,42 @@
 ﻿@inherits LayoutComponentBase
 
 <MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-<MudLayout>
+<MudLayout Style="display: flex; flex-direction: column; height: 100vh;">
     <MudAppBar Elevation="1" Style="background-color: #212737; color: white;">
-        <img src="/Images/circuitzone_logo.svg"
-             style="height: 25px; width: auto; margin-left: 1rem;"
-             alt="CircuitZone Logo">
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
+        <MudImage src="/Images/circuitzone_logo.svg"
+                  style="height: 25px; width: auto; margin-left: 1rem;"
+                  alt="CircuitZone Logo">
+        </MudImage>
     </MudAppBar>
-    <MudMainContent>
-        @*Body*@
-    </MudMainContent>
+    <MudPaper Style="flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
+        <MudDrawerContainer Class="mud-height-full">
+            <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+                <MudNavMenu>
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Home</MudNavLink>
+                    <MudNavLink Href="/counter" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Counter</MudNavLink>
+                    <MudNavLink Href="/weather" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Weather</MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
+            <MudMainContent>
+                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+                    @Body
+                </MudContainer>
+            </MudMainContent>
+        </MudDrawerContainer>
+    </MudPaper>
 </MudLayout>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+@code
+{
+    private bool _open = false;
 
-    <main>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+    private void ToggleDrawer()
+    {
+        _open = !_open;
+    }
+}
