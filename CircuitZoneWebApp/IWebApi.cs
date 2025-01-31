@@ -1,11 +1,11 @@
 ﻿using Refit;
-using System.Net.Http.Headers;
+using CircuitZoneConsumerApi.Models;
 
 namespace CircuitZoneWebApp
 {
-    //public interface IWebApi
-    //{
-    //    [Get("/getproducts")]
-    //    Task<List<ProductModel>> GetProducts(); // Mudar para correcto no futuro
-    //}
+    public interface IWebApi
+    {
+        [Get("/produtos")]
+        Task<List<ProductModel>> GetProduto();
+    }
 }

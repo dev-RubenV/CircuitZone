@@ -1,7 +1,30 @@
 ﻿@page "/products"
+@using CircuitZoneConsumerApi.Models;
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
 
 <h3>ProductList</h3>
 
-@code {
 
+<MudTable Items="@ProductItems" Hover="true" Breakpoint="Breakpoint.Sm">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>Description</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Nome</MudTd>
+        <MudTd DataLabel="Price">@($"{context.Preco}€")</MudTd>
+        <MudTd DataLabel="Description">@context.Descricao</MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+@code {
+    List<ProductModel> ProductItems { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ProductItems = await WebApi.GetProduto();
+    }
 }
