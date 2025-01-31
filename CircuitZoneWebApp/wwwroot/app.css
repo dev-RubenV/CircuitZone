@@ -49,3 +49,12 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+/* Mudblazor Custom Palette */
+.custom-theme-active {
+    --mud-palette-primary: #4d6bfe !important;
+    --mud-palette-primary-dark: #212327 !important;
+    --mud-palette-primary-light: #abb2bd !important;
+    --mud-palette-drawer-icon: #abb2bd !important;
+}
+

@@ -6,17 +6,17 @@
 <MudSnackbarProvider />
 
 <MudLayout Style="display: flex; flex-direction: column; height: 100vh;">
-    <MudAppBar Elevation="1" Style="background-color: #212737; color: white;">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
+    <MudAppBar Elevation="0" Style="background-color: #212327; color: white;">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Style="color: #abb2bd;" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
         <MudImage src="/Images/circuitzone_logo.svg"
-                  style="height: 25px; width: auto; margin-left: 1rem;"
+                  style="height: 28px; width: auto; margin-left: 1rem;"
                   alt="CircuitZone Logo">
         </MudImage>
     </MudAppBar>
-    <MudPaper Style="flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
+    <MudPaper Style="background-color: #292a2d; color: #f9f9f9; flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
         <MudDrawerContainer Class="mud-height-full">
-            <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
-                <MudNavMenu>
+            <MudDrawer @bind-Open="@_open" Style="background-color: #212327;" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+                <MudNavMenu Class="custom-theme-active" Style="color:#abb2bd">
                     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Home</MudNavLink>
                     <MudNavLink Href="/counter" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Counter</MudNavLink>
                     <MudNavLink Href="/weather" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Weather</MudNavLink>
@@ -30,6 +30,7 @@
         </MudDrawerContainer>
     </MudPaper>
 </MudLayout>
+
 
 @code
 {
