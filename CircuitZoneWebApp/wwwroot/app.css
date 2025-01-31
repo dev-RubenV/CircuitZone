@@ -58,3 +58,44 @@ h1:focus {
     --mud-palette-drawer-icon: #abb2bd !important;
 }
 
+.custom-button {
+    background-color: #4d6bfe !important;
+    color: #f9f9f9 !important;
+    border-color: #534dfe !important;
+}
+
+.custom-button:hover {
+    background-color: #4166d5 !important;
+    border-color: #534dfe !important;
+}
+
+.custom-theme-form {
+    color: #4166d5 !important;
+    --mud-palette-primary: #4d6bfe !important;
+    --mud-palette-primary-dark: #212327 !important;
+    --mud-palette-primary-light: #abb2bd !important;
+    --mud-palette-drawer-icon: #abb2bd !important;
+    --mud-palette-action-default: #f9f9f9 !important;
+}
+
+.mud-popover .mud-list {
+background-color: #212327 !important;
+}
+
+.mud-popover .mud-list .mud-list-item {
+color: #f9f9f9 !important;
+}
+
+.mud-popover .mud-list .mud-list-item:hover,
+.mud-popover .mud-list .mud-list-item.mud-selected {
+    background-color: #4d6bfe !important;
+    color: #fff !important;
+}
+
+.custom-theme-form .mud-input-input {
+color: #f9f9f9 !important; 
+background-color: #292a2d !important;
+}
+
+
+

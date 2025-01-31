@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider/>
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -15,11 +15,12 @@
     </MudAppBar>
     <MudPaper Style="background-color: #292a2d; color: #f9f9f9; flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
         <MudDrawerContainer Class="mud-height-full">
-            <MudDrawer @bind-Open="@_open" Style="background-color: #212327;" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+            <MudDrawer @bind-Open="@_open" Style="font-family: Lexend; background-color: #212327;" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
                 <MudNavMenu Class="custom-theme-active" Style="color:#abb2bd">
-                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Home</MudNavLink>
-                    <MudNavLink Href="/counter" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Counter</MudNavLink>
-                    <MudNavLink Href="/weather" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Weather</MudNavLink>
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+                    <MudNavLink Href="/products" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Products</MudNavLink>
+                    <MudNavLink Href="/addproduct" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Add Product</MudNavLink>
+                    <MudNavLink Href="/adduser" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Add User</MudNavLink>
                 </MudNavMenu>
             </MudDrawer>
             <MudMainContent>
