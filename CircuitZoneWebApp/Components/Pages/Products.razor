@@ -4,22 +4,21 @@
 @inject NavigationManager NavigationManager
 
 <h3>ProductList</h3>
-@foreach (var product in ProductItems)
-{
-    <MudCard>
-        <MudCardMedia Image="" Height="200"/>
-        <MudCardContent>
-            <MudText Typo="Typo.h5">@product.Nome</MudText>
-            <MudText Typo="Typo.body1">@product.Preco</MudText>
-            <MudText Typo="Typo.body2">@product.Descricao</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Variant="Variant.Text" Color="Color.Primary">Edit</MudButton>
-            <MudButton Variant="Variant.Text" Color="Color.Error">Delete</MudButton>
-        </MudCardActions>
-    </MudCard>
 
-}
+
+<MudTable Items="@ProductItems" Hover="true" Breakpoint="Breakpoint.Sm">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>Description</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Nome</MudTd>
+        <MudTd DataLabel="Price">@($"{context.Preco}€")</MudTd>
+        <MudTd DataLabel="Description">@context.Descricao</MudTd>
+    </RowTemplate>
+</MudTable>
+
 
 @code {
     List<ProductModel> ProductItems { get; set; } = new();
