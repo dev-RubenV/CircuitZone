@@ -24,11 +24,11 @@ namespace CircuitZone.Migrations
 
             modelBuilder.Entity("CircuitZone.Entities.Categoria", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -41,17 +41,14 @@ namespace CircuitZone.Migrations
 
             modelBuilder.Entity("CircuitZone.Entities.Imagem", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
-
-                    b.Property<long>("ProdutoId1")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -59,18 +56,18 @@ namespace CircuitZone.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProdutoId1");
+                    b.HasIndex("ProdutoId");
 
                     b.ToTable("Imagens");
                 });
 
             modelBuilder.Entity("CircuitZone.Entities.Marca", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("NomeMarca")
                         .IsRequired()
@@ -83,11 +80,11 @@ namespace CircuitZone.Migrations
 
             modelBuilder.Entity("CircuitZone.Entities.Movimento", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DataMovimento")
                         .HasColumnType("datetime2");
@@ -95,48 +92,36 @@ namespace CircuitZone.Migrations
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
-                    b.Property<long>("ProdutoId1")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
                     b.Property<int>("TipoMovimentoId")
                         .HasColumnType("int");
 
-                    b.Property<long>("TipoMovimentoId1")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("UtilizadorId")
                         .HasColumnType("int");
 
-                    b.Property<long>("UtilizadorId1")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ProdutoId1");
+                    b.HasIndex("ProdutoId");
 
-                    b.HasIndex("TipoMovimentoId1");
+                    b.HasIndex("TipoMovimentoId");
 
-                    b.HasIndex("UtilizadorId1");
+                    b.HasIndex("UtilizadorId");
 
                     b.ToTable("Movimentos");
                 });
 
             modelBuilder.Entity("CircuitZone.Entities.Produto", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
-
-                    b.Property<long>("CategoriaId1")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("CodigoEAN")
                         .IsRequired()
@@ -148,9 +133,6 @@ namespace CircuitZone.Migrations
 
                     b.Property<int>("MarcaId")
                         .HasColumnType("int");
-
-                    b.Property<long>("MarcaId1")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -164,20 +146,20 @@ namespace CircuitZone.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoriaId1");
+                    b.HasIndex("CategoriaId");
 
-                    b.HasIndex("MarcaId1");
+                    b.HasIndex("MarcaId");
 
                     b.ToTable("Produtos");
                 });
 
             modelBuilder.Entity("CircuitZone.Entities.TipoMovimento", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Tipo")
                         .IsRequired()
@@ -190,11 +172,11 @@ namespace CircuitZone.Migrations
 
             modelBuilder.Entity("CircuitZone.Entities.Utilizador", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -232,7 +214,7 @@ namespace CircuitZone.Migrations
                 {
                     b.HasOne("CircuitZone.Entities.Produto", "Produto")
                         .WithMany("Imagens")
-                        .HasForeignKey("ProdutoId1")
+                        .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -243,19 +225,19 @@ namespace CircuitZone.Migrations
                 {
                     b.HasOne("CircuitZone.Entities.Produto", "Produto")
                         .WithMany()
-                        .HasForeignKey("ProdutoId1")
+                        .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CircuitZone.Entities.TipoMovimento", "TipoMovimento")
                         .WithMany()
-                        .HasForeignKey("TipoMovimentoId1")
+                        .HasForeignKey("TipoMovimentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CircuitZone.Entities.Utilizador", "Utilizador")
                         .WithMany()
-                        .HasForeignKey("UtilizadorId1")
+                        .HasForeignKey("UtilizadorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -270,13 +252,13 @@ namespace CircuitZone.Migrations
                 {
                     b.HasOne("CircuitZone.Entities.Categoria", "Categoria")
                         .WithMany()
-                        .HasForeignKey("CategoriaId1")
+                        .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CircuitZone.Entities.Marca", "Marca")
                         .WithMany()
-                        .HasForeignKey("MarcaId1")
+                        .HasForeignKey("MarcaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

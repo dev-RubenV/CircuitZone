@@ -9,9 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-//builder.Services
-//    .AddRefitClient<IWebApi>()
-//    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.github.com"));
+builder.Services
+    .AddRefitClient<IWebApi>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7047"));
 
 builder.Services.AddMudServices();
 var app = builder.Build();

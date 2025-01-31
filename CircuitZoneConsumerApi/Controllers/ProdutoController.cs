@@ -20,7 +20,7 @@ namespace CircuitZoneConsumerApi.Controllers
         [HttpGet("/produtos")]
         public async Task<List<Produto>> GetProduto()
         {
-            return await _businessContext.Produtos.ToListAsync();
+            return await _businessContext.Produtos.Include(p => p.Imagens).Include(p => p.Categoria).Include(p => p.Marca).ToListAsync();
         }
     }
 }

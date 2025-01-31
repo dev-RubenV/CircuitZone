@@ -24,7 +24,7 @@ namespace CircuitZone.Data
                 "Data Source=SQL6033.site4now.net;" +
                 "Initial Catalog=db_ab232d_circuitzone;" +
                 "User Id=db_ab232d_circuitzone_admin;" +
-                "Password=swuH.F!M9x.&JnG;" +
+                "Password=swuH.F!M9x.=JnG;" +
                 "TrustServerCertificate=True;" +
                 "Encrypt=False");
         }
