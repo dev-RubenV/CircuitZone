@@ -11,5 +11,7 @@ namespace CircuitZone.Entities
         public string Url { get; set; }
         public int ProdutoId { get; set; }
         public Produto Produto { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }
