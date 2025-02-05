@@ -1,6 +1,68 @@
-﻿@page "/addproduct"
+﻿@page "/adicionar-produtos"
 @rendermode InteractiveServer
+@inject IWebApi WebApi
+@inject ISnackbar Snackbar
+@inject HttpClient Http
+@using MudBlazor
+@using CircuitZoneConsumerApi.Models
+
+<EditForm Model="@productModel" OnValidSubmit="SaveProduct">
+    <MudStack Row Class="justify-space-between mud-width-full">
+        <MudStack Style="width: 300px">
+            <MudTextField Label="Nome" Variant="Variant.Filled" Typo="Typo.subtitle1" @bind-Value="productModel.Nome" />
+            <MudTextField Label="Descricao" Variant="Variant.Filled" Lines="3" @bind-Value="productModel.Descricao" />
+            <MudTextField Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" />
+            <MudTextField Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" />
+            <MudTextField Label="Codigo EAN" Variant="Variant.Filled" @bind-Value="productModel.CodigoEAN" />
+
+            <MudSelect @bind-Value="productModel.MarcaId" Variant="Variant.Filled" Placeholder="Seleciona uma marca" Label="Marca">
+                @foreach (var marca in marcasModel)
+                {
+                    <MudSelectItem Value="marca.Id">@marca.NomeMarca</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect @bind-Value="productModel.CategoriaId" Variant="Variant.Filled" Placeholder="Seleciona uma categoria" Label="Categoria">
+                @foreach (var categoria in categoriasModel)
+                {
+                    <MudSelectItem Value="categoria.Id">@categoria.CategoriaNome</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudButton OnClick="SaveProduct" Variant="Variant.Filled" Color="Color.Primary">Adicionar Produto</MudButton>
+        </MudStack>
+    </MudStack>
+</EditForm>
 
 
+@code {
+    private ProductModel productModel = new ProductModel();
+    private List<MarcasModel> marcasModel = new List<MarcasModel>();
+    private List<CategoriasModel> categoriasModel = new List<CategoriasModel>();
 
-<MudButton Variant="Variant.Filled" Class="custom-button">Add Product</MudButton>
+    protected override async Task OnInitializedAsync()
+    {
+        marcasModel = await WebApi.GetMarcas();
+        categoriasModel = await WebApi.GetCategorias();
+    }
+
+    private async Task SaveProduct()
+    {
+        productModel.Id = 0;
+        productModel.IsCreated = DateTime.Now;
+        productModel.IsUpdated = DateTime.Now;
+        productModel.IsDeleted = false;
+        productModel.ImagensUrls = new List<string> { "/Images/no-image.jpg" };
+
+        try
+        {
+            var result = await WebApi.AddProduto(productModel);
+            Console.WriteLine($"API Response: {result}");
+            Snackbar.Add("Produto adicionado com sucesso", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro {ex.Message}", Severity.Error);
+        }
+    }
+}

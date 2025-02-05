@@ -1,26 +1,32 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider/>
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="MyCustomTheme"/>
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout Style="display: flex; flex-direction: column; height: 100vh;">
-    <MudAppBar Elevation="0" Style="background-color: #212327; color: white;">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Style="color: #abb2bd;" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
-        <MudImage src="/Images/circuitzone_logo.svg"
-                  style="height: 28px; width: auto; margin-left: 1rem;"
-                  alt="CircuitZone Logo">
+    <MudAppBar Elevation="0">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
+        <MudImage src="@(_isDarkMode ? "/Images/circuitzone_logo.svg" : "/Images/circuitzone_logo_light.svg")" style="height: 28px; width: auto; margin-left: 1rem;"
+        alt="CircuitZone Logo">
         </MudImage>
+        <MudSpacer />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Filled.WbSunny" Color="@Color.Warning" ToggledColor="@Color.Secondary" />
+        <MudSwitch @bind-Value="@_isDarkMode" Color="Color.Primary" UncheckedColor="Color.Warning" />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Default" ToggledColor="@Color.Primary" />
+
     </MudAppBar>
-    <MudPaper Style="background-color: #292a2d; color: #f9f9f9; flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
+    <MudPaper Elevation="25" Style="flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
         <MudDrawerContainer Class="mud-height-full">
-            <MudDrawer @bind-Open="@_open" Style="font-family: Lexend; background-color: #212327;" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
-                <MudNavMenu Class="custom-theme-active" Style="color:#abb2bd">
+            <MudDrawer @bind-Open="@_open" Style="font-family: Lexend;" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+                <MudNavMenu Class="custom-theme-active">
                     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-                    <MudNavLink Href="/products" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Products</MudNavLink>
-                    <MudNavLink Href="/addproduct" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Add Product</MudNavLink>
-                    <MudNavLink Href="/adduser" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Add User</MudNavLink>
+                    <MudNavLink Href="/produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Produtos</MudNavLink>
+                    <MudNavLink Href="/adicionar-produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Adicionar Produto</MudNavLink>
+                    <MudNavLink Href="/adduser" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Adicionar User</MudNavLink>
+
+
                 </MudNavMenu>
             </MudDrawer>
             <MudMainContent>
@@ -35,10 +41,38 @@
 
 @code
 {
+    private bool _isDarkMode = true;
+
     private bool _open = false;
 
     private void ToggleDrawer()
     {
         _open = !_open;
     }
+
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            PaletteLight = new PaletteLight()
+            {
+                Primary = "#4d6bfe",
+                Secondary = "#abb2bd",
+                AppbarBackground = "#fcfcff",
+                DrawerBackground = "#fcfcff",
+                Surface = "#f6f6f6",
+                
+            },
+            PaletteDark = new PaletteDark()
+            {
+                Primary = "#4d6bfe",
+                Secondary = "#abb2bd",
+                AppbarBackground = "#212327",
+                DrawerText = "#abb2bd",
+                DrawerIcon = "#abb2bd",
+                DrawerBackground = "#212327",
+                Black = "#212327",
+                AppbarText = "#abb2bd",
+                TextPrimary = "#fcfcff",
+                Surface = "#292a2d",
+            }
+        };
 }
