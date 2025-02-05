@@ -4,7 +4,6 @@ using CircuitZoneConsumerApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CircuitZone.Shared.Models;
 
 
 
@@ -48,7 +47,7 @@ namespace CircuitZoneConsumerApi.Controllers
         }
         //
 
-        [HttpPost("/addprodutos")]
+        [HttpPost("/adicionar-produto")]
         public async Task<IActionResult> AddProdutos(ProductModel productModel)
         {
             var produto = await _businessContext.Produtos.FirstOrDefaultAsync(t => t.Id.Equals(productModel.Id));
@@ -59,12 +58,14 @@ namespace CircuitZoneConsumerApi.Controllers
             var newProduto = new Produto();
             newProduto.Nome = productModel.Nome;
             newProduto.Descricao = productModel.Descricao;
-            //newProduto.Marca = productModel.Marca;
-            //newProduto.Categoria = productModel.Categoria;
+            newProduto.MarcaId = productModel.MarcaId;
+            newProduto.CategoriaId = productModel.CategoriaId;
             newProduto.Preco = productModel.Preco;
             newProduto.CodigoEAN = productModel.CodigoEAN;
             newProduto.QuantidadeDisponivel = productModel.QuantidadeDisponivel;
-            //newProduto.Imagem = productModel.Imagem;
+            newProduto.IsDeleted = false;
+            newProduto.IsCreated = DateTime.Now;
+            //newProduto.Imagens = productModel.ImagensUrls;
 
             _businessContext.Produtos.Add(newProduto);
 
@@ -86,10 +87,13 @@ namespace CircuitZoneConsumerApi.Controllers
 
             produto.Nome = productModel.Nome;
             produto.Descricao = productModel.Descricao;
-            //produto.Marca = productModel.Marca; 
-            //produto.Categoria = productModel.Categoria;
+            produto.MarcaId = productModel.MarcaId;
+            produto.CategoriaId = productModel.CategoriaId;
             produto.Preco = productModel.Preco;
+            produto.CodigoEAN = productModel.CodigoEAN;
             produto.QuantidadeDisponivel = productModel.QuantidadeDisponivel;
+            produto.IsDeleted = productModel.IsDeleted;
+            produto.IsUpdated = DateTime.Now;
             //produto.Imagem = productModel.Imagem;
 
             var result = await _businessContext.SaveChangesAsync();
@@ -99,7 +103,37 @@ namespace CircuitZoneConsumerApi.Controllers
 
             return BadRequest();
         }
-=======
+
+        [HttpGet("/marcas")]
+        public async Task<IActionResult> GetMarcas()
+        {
+            var marcasTable = await _businessContext.Marcas
+            .Where(m => m.IsDeleted == false && m.NomeMarca != null)
+            .Select(m => new MarcasModel
+            {
+                Id = m.Id,
+                NomeMarca = m.NomeMarca,
+            })
+            .ToListAsync();
+
+            return Ok(marcasTable);
+        }
+
+        [HttpGet("/categorias")]
+        public async Task<IActionResult> GetCategorias()
+        {
+            var categoriasTable = await _businessContext.Categorias
+            .Where(m => m.IsDeleted == false && m.Nome != null)
+            .Select(m => new CategoriasModel
+            {
+                Id = m.Id,
+                CategoriaNome = m.Nome,
+            })
+            .ToListAsync();
+
+            return Ok(categoriasTable);
+        }
+
         //[HttpPost("/adicionar-produto")]
         //public async Task<IActionResult> AddProduct(ProductModel productModel)
         //{
@@ -116,7 +150,7 @@ namespace CircuitZoneConsumerApi.Controllers
         //    newProduct.QuantidadeDisponivel = productModel.QuantidadeDisponivel;
         //    newProduct.CategoriaNome = productModel.CategoriaNome;
         //    newProduct.MarcaNome = productModel.MarcaNome;
-            
+
 
         //    _businessContext.Produtos.Add(newProduct);
 
