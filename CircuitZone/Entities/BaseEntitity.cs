@@ -8,6 +8,6 @@ namespace CircuitZone.Entities
 {
     public class BaseEntitity
     {
-        public long Id {  get; set; }
+        public int Id {  get; set; }
     }
 }

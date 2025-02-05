@@ -1,0 +1,65 @@
+﻿@page "/products"
+@using CircuitZoneConsumerApi.Models;
+@using System.Net.Http.Json
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
+
+<h2 class="mb-2">Produtos</h2>
+
+<MudTable Items="@ProductItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh Style="text-align:center">Imagem</MudTh>
+        <MudTh Style="text-align:center">Nome</MudTh>
+        <MudTh Style="text-align:center">Descrição</MudTh>
+        <MudTh Style="text-align:center">Preço</MudTh>
+        <MudTh Style="text-align:center">Stock</MudTh>
+        <MudTh Style="text-align:center">Marca</MudTh>
+        <MudTh Style="text-align:center">Categoria</MudTh>
+        <MudTh Style="text-align:center">EAN</MudTh>
+        <MudTh Style="text-align:center">Editar</MudTh>
+        <MudTh Style="text-align:center">Remover</MudTh>
+    </HeaderContent>
+    <RowTemplate Context="produto">
+        <MudTd Style="text-align:center" DataLabel="Nome"><MudImage Src="@produto.ImagensUrls.FirstOrDefault()" Alt="@produto.Nome" Width="80" Elevation="0" Class="rounded-lg ma-4" FallbackSrc="/Images/no-image.jpg" /></MudTd>
+        <MudTd Style="text-align:center" DataLabel="Nome">@produto.Nome</MudTd>
+        <MudTd Style="text-align:justify" DataLabel="Descrição">@produto.Descricao</MudTd>
+        <MudTd Style="text-align:center" DataLabel="Preço">@($"{produto.Preco}€")</MudTd>
+        <MudTd Style="text-align:center" DataLabel="Stock">@produto.QuantidadeDisponivel</MudTd>
+        <MudTd Style="text-align:center" DataLabel="Marca">@produto.MarcaNome</MudTd>
+        <MudTd Style="text-align:center" DataLabel="Categoria">@produto.CategoriaNome</MudTd>
+        <MudTd Style="text-align:center" DataLabel="EAN">@produto.CodigoEAN</MudTd>
+        <MudTd Style="text-align:center" DataLabel="Editar"><MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Style="background-color:#4d6bfe; color:#f9f9f9" Size="Size.Medium" /></MudTd>
+        <MudTd Style="text-align:center" DataLabel="Remover"><MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Style="background-color:#eb344c; color:#f9f9f9" Size="Size.Medium" /></MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                       RowsPerPageString="@rowsPerPageString"
+                       InfoFormat="@infoFormat"
+                       AllItemsText="@allItemsText"
+                       HorizontalAlignment="@horizontalAlignment"
+                       HideRowsPerPage="@hideRowsPerPage"
+                       HidePageNumber="@hidePageNumber"
+                       HidePagination="@hidePagination" />
+    </PagerContent>
+</MudTable>
+
+
+@code {
+    List<ProductModel> ProductItems { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ProductItems = await WebApi.GetProduto();
+        _loading = false;
+    }
+
+    //MudBlazor Table
+    private bool _loading = true;
+    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
+    private bool hidePageNumber;
+    private bool hidePagination;
+    private bool hideRowsPerPage;
+    private string rowsPerPageString = "Rows per page:";
+    private string infoFormat = "{first_item}-{last_item} of {all_items}";
+    private string allItemsText = "All";
+}

@@ -17,4 +17,10 @@
     <Folder Include="Components\Images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CircuitZone.Shared\CircuitZone.Shared.csproj" />
+    <ProjectReference Include="..\CircuitZoneConsumerApi\CircuitZoneConsumerApi.csproj" />
+    <ProjectReference Include="..\CircuitZone\CircuitZone.csproj" />
+  </ItemGroup>
+
 </Project>
