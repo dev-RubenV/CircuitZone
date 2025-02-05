@@ -1,25 +1,28 @@
-﻿@page "/products"
+﻿@page "/produtos"
 @using CircuitZoneConsumerApi.Models;
 @using System.Net.Http.Json
+@using CircuitZoneWebApp.Components.Layout
 @inject IWebApi WebApi
 @inject NavigationManager NavigationManager
 
 <h2 class="mb-2">Produtos</h2>
 
-<MudTable Items="@ProductItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+<MudTable Items="@ProductItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Primary">
     <HeaderContent>
-        <MudTh Style="text-align:center">Imagem</MudTh>
-        <MudTh Style="text-align:center">Nome</MudTh>
-        <MudTh Style="text-align:center">Descrição</MudTh>
-        <MudTh Style="text-align:center">Preço</MudTh>
-        <MudTh Style="text-align:center">Stock</MudTh>
-        <MudTh Style="text-align:center">Marca</MudTh>
-        <MudTh Style="text-align:center">Categoria</MudTh>
-        <MudTh Style="text-align:center">EAN</MudTh>
-        <MudTh Style="text-align:center">Editar</MudTh>
-        <MudTh Style="text-align:center">Remover</MudTh>
+        <MudTh Style="text-align:center"><h4>#</h4></MudTh>
+        <MudTh Style="text-align:center"><h3>Imagem</h3></MudTh>
+        <MudTh Style="text-align:center"><h4>Nome</h4></MudTh>
+        <MudTh Style="text-align:center"><h4>Descrição</h4></MudTh>
+        <MudTh Style="text-align:center"><h4>Preço</h4></MudTh>
+        <MudTh Style="text-align:center"><h4>Stock</h4></MudTh>
+        <MudTh Style="text-align:center"><h4>Marca</h4></MudTh>
+        <MudTh Style="text-align:center"><h4>Categoria</h4></MudTh>
+        <MudTh Style="text-align:center"><h4>EAN</h4></MudTh>
+        <MudTh Style="text-align:center"><h4>Editar</h4></MudTh>
+        <MudTh Style="text-align:center"><h4>Remover</h4></MudTh>
     </HeaderContent>
     <RowTemplate Context="produto">
+        <MudTd Style="text-align:center;" DataLabel="Nome"><h4>@produto.Id</h4></MudTd>
         <MudTd Style="text-align:center" DataLabel="Nome"><MudImage Src="@produto.ImagensUrls.FirstOrDefault()" Alt="@produto.Nome" Width="80" Elevation="0" Class="rounded-lg ma-4" FallbackSrc="/Images/no-image.jpg" /></MudTd>
         <MudTd Style="text-align:center" DataLabel="Nome">@produto.Nome</MudTd>
         <MudTd Style="text-align:justify" DataLabel="Descrição">@produto.Descricao</MudTd>
@@ -45,6 +48,7 @@
 
 
 @code {
+
     List<ProductModel> ProductItems { get; set; } = new();
 
     protected override async Task OnParametersSetAsync()

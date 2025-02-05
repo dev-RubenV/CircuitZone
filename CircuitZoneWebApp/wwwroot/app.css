@@ -50,8 +50,15 @@ h1:focus {
     border-color: #929292;
 }
 
-/* Mudblazor Custom Palette */
-.custom-theme-active {
+/* Mudblazor Custom */
+
+.mud-table {
+    background-color: rgba(49, 69, 176, 0.02) !important;
+}
+
+
+
+/*.custom-theme-active {
     --mud-palette-primary: #4d6bfe !important;
     --mud-palette-primary-dark: #212327 !important;
     --mud-palette-primary-light: #abb2bd !important;
@@ -101,22 +108,22 @@ background-color: #292a2d !important;
     color: #f9f9f9 !important;
     background-color: #212327 !important;
     border-color: #292a2d !important;
-}
+}*/
 
-.mud-table .mud-table-cell {
+/*.mud-table .mud-table-cell {
     color: #f9f9f9 !important;
     border-color: #292a2d !important;
-}
+}*/
 
 .mud-table-head .mud-table-row .mud-table-cell {
-    color: #4d6bfe !important;
-}
-
-.mud-toolbar {
     border-color: #4d6bfe !important;
 }
 
-.mud-icon-button-label {
+/*.mud-toolbar {
+    border-color: #4d6bfe !important;
+}*/
+
+/*.mud-icon-button-label {
     color: #f9f9f9 !important;
 }
 
@@ -126,4 +133,4 @@ background-color: #292a2d !important;
 
 .mud-icon-root.mud-svg-icon {
     color: #f9f9f9
-}
+}*/
