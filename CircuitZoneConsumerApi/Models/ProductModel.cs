@@ -1,4 +1,5 @@
 ﻿using CircuitZone.Entities;
+using System.Text.Json.Serialization;
 
 namespace CircuitZoneConsumerApi.Models
 {
@@ -12,7 +13,7 @@ namespace CircuitZoneConsumerApi.Models
         public int QuantidadeDisponivel { get; set; }
         public string? MarcaNome { get; set; }
         public string? CategoriaNome { get; set; }
-        public List<string> ImagensUrls { get; set; }
+        public List<string>? ImagensUrls { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime IsCreated { get; set; }
         public DateTime IsUpdated { get; set; }

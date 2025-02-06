@@ -36,7 +36,8 @@ namespace CircuitZoneConsumerApi.Controllers
                     QuantidadeDisponivel = p.QuantidadeDisponivel,
                     MarcaNome = p.Marca.NomeMarca,
                     CategoriaNome = p.Categoria.Nome,
-                    ImagensUrls = p.Imagens.Select(p => p.Url).ToList()
+                    ImagensUrls = p.Imagens.Any() ? p.Imagens.Select(p => p.Url).ToList()
+                                  : new List<string> { "/Images/no-image.jpg" }
                 })
                 .ToListAsync();
 
@@ -45,7 +46,17 @@ namespace CircuitZoneConsumerApi.Controllers
             else
                 return Ok(productTable);
         }
-        //
+        
+        [HttpGet("/getproduto")]
+        public async Task<IActionResult> GetSingleProduct(int id)
+        {
+            var product = await _businessContext.Produtos.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id.Equals(id));
+
+            if (product is null)
+                return NotFound();
+            else
+                return Ok(product);
+        }
 
         [HttpPost("/adicionar-produto")]
         public async Task<IActionResult> AddProdutos(ProductModel productModel)
@@ -92,7 +103,6 @@ namespace CircuitZoneConsumerApi.Controllers
             produto.Preco = productModel.Preco;
             produto.CodigoEAN = productModel.CodigoEAN;
             produto.QuantidadeDisponivel = productModel.QuantidadeDisponivel;
-            produto.IsDeleted = productModel.IsDeleted;
             produto.IsUpdated = DateTime.Now;
             //produto.Imagem = productModel.Imagem;
 
@@ -133,40 +143,6 @@ namespace CircuitZoneConsumerApi.Controllers
 
             return Ok(categoriasTable);
         }
-
-        //[HttpPost("/adicionar-produto")]
-        //public async Task<IActionResult> AddProduct(ProductModel productModel)
-        //{
-        //    var product = await _businessContext.Produtos.FirstOrDefaultAsync(p => p.Id.Equals(productModel.Id));
-
-        //    if (product is not null)
-        //        return BadRequest();
-
-        //    var newProduct = new ProductModel();
-        //    newProduct.Nome = productModel.Nome;
-        //    newProduct.Descricao = productModel.Descricao;
-        //    newProduct.Preco = productModel.Preco;
-        //    newProduct.CodigoEAN = productModel.CodigoEAN;
-        //    newProduct.QuantidadeDisponivel = productModel.QuantidadeDisponivel;
-        //    newProduct.CategoriaNome = productModel.CategoriaNome;
-        //    newProduct.MarcaNome = productModel.MarcaNome;
-
-
-        //    _businessContext.Produtos.Add(newProduct);
-
-        //    var result = await _businessContext.SaveChangesAsync();
-
-        //    if (result.Equals(1))
-        //        return Ok();
-        //    return BadRequest();
-        //}
-
-
-        //[HttpGet("/produtos")]
-        //public async Task<List<Produto>> GetProduto()
-        //{
-        //    return await _businessContext.Produtos.ToListAsync();
-        //}
     }
 
 
