@@ -27,5 +27,11 @@ namespace CircuitZoneWebApp
         [Put("/editproduto")]
         Task<HttpResponseMessage> EditProduto([Body] ProductModel productModel);
 
+        [Get("/deleted-produtos")]
+        Task<List<ProductModel>> GetDeletedProduct();
+        
+        [Get("/getsingledeletedproduto")]
+        Task<ProductModel> GetSingleDeletedProduct(int id);
+
     }
 }
