@@ -9,6 +9,9 @@ namespace CircuitZoneWebApp
         [Get("/produtos")]
         Task<List<ProductModel>> GetProduto();
 
+        [Get("/getproduto")]
+        Task<ProductModel> GetSingleProduct(int id);
+
         [Get("/marcas")]
         Task<List<MarcasModel>> GetMarcas();
 
@@ -20,5 +23,9 @@ namespace CircuitZoneWebApp
 
         [Delete("/deleteproduto")]
         Task<HttpResponseMessage> DeleteProduto(int id);
+        
+        [Put("/editproduto")]
+        Task<HttpResponseMessage> EditProduto([Body] ProductModel productModel);
+
     }
 }
