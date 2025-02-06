@@ -17,5 +17,8 @@ namespace CircuitZoneWebApp
 
         [Post("/adicionar-produto")]
         Task<HttpResponseMessage> AddProduto([FromBody] ProductModel productModel);
+
+        [Delete("/deleteproduto")]
+        Task<HttpResponseMessage> DeleteProduto(int id);
     }
 }

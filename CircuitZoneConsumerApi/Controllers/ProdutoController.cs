@@ -134,6 +134,24 @@ namespace CircuitZoneConsumerApi.Controllers
             return Ok(categoriasTable);
         }
 
+        [HttpDelete("/deleteproduto")]
+        public async Task<IActionResult> DeleteProduto(int id)
+        {
+            var produto = await _businessContext.Produtos.FirstOrDefaultAsync(t => t.Id.Equals(id));
+
+            if (produto is null)
+                return BadRequest();
+
+            produto.IsDeleted = true;
+
+            var result = await _businessContext.SaveChangesAsync();
+
+            if (result.Equals(1))
+                return Ok();
+
+            return BadRequest();
+        }
+
         //[HttpPost("/adicionar-produto")]
         //public async Task<IActionResult> AddProduct(ProductModel productModel)
         //{
