@@ -8,11 +8,11 @@
 
 <EditForm Model="@productModel" OnValidSubmit="SaveProduct">
     <MudStack Row Class="justify-space-between mud-width-full">
-        <MudStack Style="width: 300px">
+        <MudStack Style="width: 800px">
             <MudTextField Label="Nome" Variant="Variant.Filled" Typo="Typo.subtitle1" @bind-Value="productModel.Nome" />
-            <MudTextField Label="Descricao" Variant="Variant.Filled" Lines="3" @bind-Value="productModel.Descricao" />
-            <MudTextField Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" />
-            <MudTextField Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" />
+            <MudTextField Label="Descricao" Variant="Variant.Filled" Lines="10" @bind-Value="productModel.Descricao" />
+            <MudNumericField HideSpinButtons="true" Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" Min="0"/>
+            <MudNumericField Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" Min="0" />
             <MudTextField Label="Codigo EAN" Variant="Variant.Filled" @bind-Value="productModel.CodigoEAN" />
 
             <MudSelect @bind-Value="productModel.MarcaId" Variant="Variant.Filled" Placeholder="Seleciona uma marca" Label="Marca">
@@ -44,6 +44,8 @@
     {
         marcasModel = await WebApi.GetMarcas();
         categoriasModel = await WebApi.GetCategorias();
+        productModel.MarcaId = marcasModel.FirstOrDefault().Id;
+        productModel.CategoriaId = categoriasModel.FirstOrDefault().Id;
     }
 
     private async Task SaveProduct()

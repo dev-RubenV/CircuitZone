@@ -1,0 +1,70 @@
+﻿@page "/produto/{Id:int}"
+@using CircuitZoneConsumerApi.Models;
+@inject IWebApi WebApi
+@inject ISnackbar Snackbar
+@rendermode InteractiveServer
+
+<h2 class="mb-2">Editar Produto</h2>
+
+<EditForm FormName="UpdateProduct" Model="@productModel" OnValidSubmit="UpdateProduct">
+    <MudStack Row Class="justify-space-between mud-width-full">
+        <MudStack Style="width: 800px">
+        <MudTextField Label="Nome" Variant="Variant.Filled" Typo="Typo.subtitle1" @bind-Value="productModel.Nome"/>
+        <MudTextField Label="Descricao" Variant="Variant.Filled" Lines="10" @bind-Value="productModel.Descricao"/>
+        <MudNumericField HideSpinButtons="true" Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" Min="0" />
+        <MudNumericField Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" Min="0"/>
+        <MudTextField Label="Codigo EAN" Variant="Variant.Filled" @bind-Value="productModel.CodigoEAN"/>
+
+
+            <MudSelect @bind-Value="productModel.MarcaId" Variant="Variant.Filled" Placeholder="Seleciona uma marca" Label="Marca">
+                @foreach (var marca in marcasModel)
+                {
+                    <MudSelectItem Value="marca.Id">@marca.NomeMarca</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect @bind-Value="productModel.CategoriaId" Variant="Variant.Filled" Placeholder="Seleciona uma categoria" Label="Categoria">
+                @foreach (var categoria in categoriasModel)
+                {
+                    <MudSelectItem Value="categoria.Id">@categoria.CategoriaNome</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudButton OnClick="UpdateProduct" Variant="Variant.Filled" Color="Color.Primary">Editar Produto</MudButton>
+        </MudStack>
+    </MudStack>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ProductModel productModel { get; set; } = new();
+    private List<MarcasModel> marcasModel = new List<MarcasModel>();
+    private List<CategoriasModel> categoriasModel = new List<CategoriasModel>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        productModel = await WebApi.GetSingleProduct(Id);
+    }
+
+    private async Task UpdateProduct()
+    {
+        try
+        {
+            var result = await WebApi.EditProduto(productModel);
+            Console.WriteLine($"Debug Response: {result}");
+            Snackbar.Add($"Produto editado com sucesso", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro {ex.Message}", Severity.Error);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        marcasModel = await WebApi.GetMarcas();
+        categoriasModel = await WebApi.GetCategorias();
+    }
+}

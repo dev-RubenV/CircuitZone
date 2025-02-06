@@ -9,6 +9,9 @@ namespace CircuitZoneWebApp
         [Get("/produtos")]
         Task<List<ProductModel>> GetProduto();
 
+        [Get("/getproduto")]
+        Task<ProductModel> GetSingleProduct(int id);
+
         [Get("/marcas")]
         Task<List<MarcasModel>> GetMarcas();
 
@@ -17,5 +20,8 @@ namespace CircuitZoneWebApp
 
         [Post("/adicionar-produto")]
         Task<HttpResponseMessage> AddProduto([FromBody] ProductModel productModel);
+        
+        [Put("/editproduto")]
+        Task<HttpResponseMessage> EditProduto([Body] ProductModel productModel);
     }
 }
