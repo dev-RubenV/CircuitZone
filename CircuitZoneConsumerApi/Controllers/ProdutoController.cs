@@ -36,6 +36,8 @@ namespace CircuitZoneConsumerApi.Controllers
                     QuantidadeDisponivel = p.QuantidadeDisponivel,
                     MarcaNome = p.Marca.NomeMarca,
                     CategoriaNome = p.Categoria.Nome,
+                    MarcaId = p.Marca.Id,
+                    CategoriaId = p.Categoria.Id,
                     ImagensUrls = p.Imagens.Any() ? p.Imagens.Select(p => p.Url).ToList()
                                   : new List<string> { "/Images/no-image.jpg" }
                 })
@@ -50,7 +52,24 @@ namespace CircuitZoneConsumerApi.Controllers
         [HttpGet("/getproduto")]
         public async Task<IActionResult> GetSingleProduct(int id)
         {
-            var product = await _businessContext.Produtos.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id.Equals(id));
+            var product = await _businessContext.Produtos
+            .Where(p => p.IsDeleted == false && p.Id.Equals(id))
+            .Select(p => new ProductModel
+                {
+                    Id = p.Id,
+                    Nome = p.Nome,
+                    Descricao = p.Descricao,
+                    Preco = p.Preco,
+                    CodigoEAN = p.CodigoEAN,
+                    QuantidadeDisponivel = p.QuantidadeDisponivel,
+                    MarcaNome = p.Marca.NomeMarca,
+                    CategoriaNome = p.Categoria.Nome,
+                    MarcaId = p.Marca.Id,
+                    CategoriaId = p.Categoria.Id,
+                    ImagensUrls = p.Imagens.Any() ? p.Imagens.Select(p => p.Url).ToList()
+                                        : new List<string> { "/Images/no-image.jpg" }
+                })
+                .FirstOrDefaultAsync();
 
             if (product is null)
                 return NotFound();
@@ -65,6 +84,8 @@ namespace CircuitZoneConsumerApi.Controllers
 
             if (produto is not null)
                 return BadRequest();
+            if (produto.QuantidadeDisponivel < 0)
+                return BadRequest("Produto não pode ter stock negativo.");
 
             var newProduto = new Produto();
             newProduto.Nome = productModel.Nome;
@@ -95,6 +116,9 @@ namespace CircuitZoneConsumerApi.Controllers
 
             if (produto is null)
                 return BadRequest();
+
+            if (produto.QuantidadeDisponivel < 0)
+                return BadRequest("Produto não pode ter stock negativo.");
 
             produto.Nome = productModel.Nome;
             produto.Descricao = productModel.Descricao;
@@ -132,12 +156,15 @@ namespace CircuitZoneConsumerApi.Controllers
         [HttpGet("/categorias")]
         public async Task<IActionResult> GetCategorias()
         {
+
             var categoriasTable = await _businessContext.Categorias
-            .Where(m => m.IsDeleted == false && m.Nome != null)
-            .Select(m => new CategoriasModel
+            .Where(c => c.IsDeleted == false && c.Nome != null)
+            .Select(c => new CategoriasModel
             {
-                Id = m.Id,
-                CategoriaNome = m.Nome,
+                Id = c.Id,
+                CategoriaNome = c.Nome,
+                ProdutoCount = _businessContext.Produtos.Where( p => p.IsDeleted == false && p.Nome != null && c.Id == p.CategoriaId)
+                                .Count()
             })
             .ToListAsync();
 
