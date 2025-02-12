@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
-
+@inject IWebApi WebApi
+@using CircuitZoneConsumerApi.Models
+<link rel="icon" type="image/x-icon" href="/circuitzone.ico"
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="MyCustomTheme"/>
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -17,19 +19,25 @@
         <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Default" ToggledColor="@Color.Primary" />
 
     </MudAppBar>
-        <MudPaper Elevation="25" Style="flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
+    <MudPaper Elevation="25" Style="flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
         <MudDrawerContainer Class="mud-height-full">
             <MudDrawer @bind-Open="@_open" Style="font-family: Lexend;" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
                 <MudNavMenu Class="custom-theme-active">
                     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-                    <MudNavLink Href="/produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Produtos</MudNavLink>
+
+                    <MudNavLink Href="/produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">
+                        <MudBadge Origin="Origin.CenterRight" Content="@_productCount" Color="Color.Primary" Overlap="false" Class="pr-2">
+                            Produtos
+                        </MudBadge>
+                    </MudNavLink>
+
                     <MudNavLink Href="/adicionar-produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Adicionar Produto</MudNavLink>
                     <MudNavLink Href="/adduser" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Adicionar User</MudNavLink>
 
 
                 </MudNavMenu>
             </MudDrawer>
-            <MudMainContent>
+            <MudMainContent Class="scrollbar pb-4" Style="flex: 1; overflow: auto; height: 95vh;">
                 <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
                     @Body
                 </MudContainer>
@@ -41,6 +49,19 @@
 
 @code
 {
+    private int _productCount = 0;
+
+    List<ProductModel> ProductItems { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ProductItems = await WebApi.GetProduto();
+
+        _productCount = ProductItems.Count();
+
+    }
+    
+    
     private bool _isDarkMode = true;
 
     private bool _open = false;

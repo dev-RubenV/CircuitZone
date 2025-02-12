@@ -3,13 +3,13 @@
 @inject IWebApi WebApi
 @inject ISnackbar Snackbar
 @rendermode InteractiveServer
+<title>Editar Produto</title>
 
 
-
-<MudContainer MaxWidth="MaxWidth.False">
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudGrid>
         <MudItem>
-            <MudPaper Elevation="10" Class="pa-4" Style="height: 1170px; width: 800px; justify-content: center;">
+            <MudPaper Elevation="10" Class="pa-4" Style="height: 1170px; justify-content: center;">
                 <h2 class="mb-2">Editar Produto</h2>
                 <EditForm FormName="UpdateProduct" Model="@productModel" OnValidSubmit="UpdateProduct">
                     <MudStack Row Class="justify-space-between mud-width-full">
@@ -42,25 +42,57 @@
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="12" md="4">
-            <MudPaper Elevation="10" Class="pa-4" Style="height: 200px; width: 1600px; height: 1170px;">
-                <MudCard>
-                    <MudCardMedia Image="" Height="200" />
+            <MudPaper Elevation="10" Class="pa-4" Style="height: 1170px;">
+                <MudCard Elevation="0">
+                    <MudContainer> 
+                    <MudItem Class="d-flex justify-center">
+                            <MudCarousel Class="border-2 rounded-xl" @ref="_carousel" ItemsSource="@productModel.ImagensUrls" @bind-SelectedIndex="selectedIndex" Style=" border-color: #4d6bfe; width:400px; height:400px; object-position: center;" ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture" AutoCycle="@_autocycle">
+                                <BulletTemplate Context="selected">
+                                    <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
+                                        <span class="mud-icon-button-label">
+                                            <MudIcon Icon="@(selected ? Icons.Material.Filled.Circle : Icons.Material.Outlined.Circle)" Color="@Color.Primary" />
+                                        </span>
+                                    </div>
+                                </BulletTemplate>
+                                <PreviousButtonTemplate>
+                                    <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
+                                        <span class="mud-icon-button-label">
+                                            <MudIcon Class="mud-ripple mud-ripple-icon mud-icon-button-size-medium" Icon="@Icons.Material.Rounded.NavigateBefore" Color="@Color.Primary" />
+                                        </span>
+                                    </div>
+                                </PreviousButtonTemplate>
+                                <NextButtonTemplate>
+                                    <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
+                                        <span class="mud-icon-button-label">
+                                            <MudIcon Class="mud-ripple mud-ripple-icon mud-icon-button-size-medium" Icon="@Icons.Material.Rounded.NavigateNext" Color="@Color.Primary" />
+                                        </span>
+                                    </div>
+                                </NextButtonTemplate>
+                            <ItemTemplate Context="image">
+                                <MudImage Src="@image" Alt="@productModel.Nome" ObjectFit="ObjectFit.Cover" Height="400" Width="400" />
+                            </ItemTemplate>
+                            </MudCarousel>
+                        </MudItem>
+                    </MudContainer>
                     <MudCardContent>
-                        <MudText Typo="Typo.h5">@productModel.Nome</MudText>
-                        <MudText Typo="Typo.body2">@productModel.Descricao</MudText>
-                        <MudText Typo="Typo.body2">@productModel.Preco</MudText>
+                        <MudText Class="pb-2" Style="font-family:'Lexend'; font-size:24px;">@productModel.Nome</MudText>
+                        <MudText Class="pb-2" Typo="Typo.h4" Style="color:#4d6bfe; font-family:'Lexend';">@($"{productModel.Preco}€")</MudText>
+                        <MudText Class="pb-2" Style="color:#abb2bd; font-family:'Lexend'; font-size:15px;">@($"Categoria: {productModel.CategoriaNome} | Marca: {productModel.MarcaNome} | EAN: {productModel.CodigoEAN}")</MudText>
+                        <MudText Class="pb-2" Style="color:#abb2bd; font-family:'Lexend'; font-size:15px;">@($"Disponibilidade: {productModel.QuantidadeDisponivel}")</MudText>
+                        <MudText Class="pb-2" Typo="Typo.body2" Style="font-family:'Lexend'">@productModel.Descricao</MudText>
+                        <MudText Class="pb-2" Style="color:#abb2bd; font-family:'Lexend'; font-size:10px;">@($"Criado em {productModel.IsCreated.ToString("dd/MM/yyyy - HH:mm")}h e Ultima Modificação às {productModel.IsUpdated.ToString("dd/MM/yyyy - HH:mm")}h")</MudText>
                     </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary">Share</MudButton>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-                    </MudCardActions>
                 </MudCard>
             </MudPaper>
         </MudItem>
     </MudGrid>
 </MudContainer>
 
+
+
+
 @code {
+
     [Parameter]
     public int Id { get; set; }
 
@@ -91,5 +123,30 @@
     {
         marcasModel = await WebApi.GetMarcas();
         categoriasModel = await WebApi.GetCategorias();
+    }
+
+    //MudCarousel
+    private MudCarousel<string> _carousel;
+    private bool _arrows = true;
+    private bool _bullets = true;
+    private bool _enableSwipeGesture = true;
+    private bool _autocycle = true;
+    private int selectedIndex = 0;
+
+    private async Task AddAsync()
+    {
+        productModel.ImagensUrls.Add($"Item {productModel.ImagensUrls.Count + 1}");
+        await Task.Delay(1);
+        _carousel.MoveTo(productModel.ImagensUrls.Count - 1);
+    }
+
+    private async Task DeleteAsync(int index)
+    {
+        if (productModel.ImagensUrls.Any())
+        {
+            productModel.ImagensUrls.RemoveAt(index);
+            await Task.Delay(1);
+            _carousel.MoveTo(System.Math.Max(System.Math.Min(index, productModel.ImagensUrls.Count - 1), 0));
+        }
     }
 }

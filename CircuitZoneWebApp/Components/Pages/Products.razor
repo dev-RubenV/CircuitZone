@@ -5,9 +5,10 @@
 @inject IWebApi WebApi
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
+<title>Produtos</title>
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2 class="mb-2">Produtos</h2>
+    <MudText Class="mb-2" Typo="Typo.h5" Color="Color.Primary" Style="font-family: Lexend; font-weight:500;">Produtos</MudText>
     <div class="ma-2" style="display: flex; align-items: center;">
         <h3 class="pr-2"><a href="/lixo-produtos">Lixo Produtos</a></h3>
         <MudIconButton Icon="@Icons.Material.Filled.RestoreFromTrash" Variant="Variant.Filled" Href="/lixo-produtos" Style="background-color:#4d6bfe; color:#f9f9f9" Size="Size.Small" />
@@ -15,7 +16,6 @@
 </div>
 
 
-<MudPaper Class="d-flex flex-column overflow-x-auto " Height="85vh">
     <MudTable Items="@ProductItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Primary">
         <HeaderContent>
             <MudTh Style="text-align:center"><h4>#</h4></MudTh>
@@ -55,7 +55,6 @@
             HidePagination="@hidePagination" />
         </PagerContent>
     </MudTable>
-</MudPaper>
 
 @code {
 

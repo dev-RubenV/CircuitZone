@@ -13,7 +13,7 @@ namespace CircuitZoneConsumerApi.Models
         public int QuantidadeDisponivel { get; set; }
         public string? MarcaNome { get; set; }
         public string? CategoriaNome { get; set; }
-        public List<string>? ImagensUrls { get; set; }
+        public List<string>? ImagensUrls { get; set; } = new List<string>();
         public bool IsDeleted { get; set; }
         public DateTime IsCreated { get; set; }
         public DateTime IsUpdated { get; set; }
@@ -31,5 +31,7 @@ namespace CircuitZoneConsumerApi.Models
     {
         public int Id { get; set; }
         public string CategoriaNome { get; set; }
+        public int ProdutoCount { get; set; }
+        public decimal PrecoMedio { get; set; }
     }
 }
