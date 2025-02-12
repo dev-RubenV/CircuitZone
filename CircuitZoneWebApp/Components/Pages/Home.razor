@@ -2,30 +2,31 @@
 @rendermode InteractiveServer
 @inject IWebApi WebApi
 @using CircuitZoneConsumerApi.Models;
+<title>Dashboard</title>
 
-<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
+<MudContainer Class=" px-8" MaxWidth="MaxWidth.ExtraLarge">
     <MudGrid>
 
         <MudItem xs="12" sm="6" md="3">
-            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="border-color:rgba(0, 0, 0, 0.1);  height: 150px;">
+            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1);  height: 150px;">
                 <h2 style="text-align:center;">Produtos em Stock:</h2>
                 <MudText Style="color:#4d6bfe; text-align:center; font-family:'Lexend'; font-size:68px;"><bold>@($"{productsInStock}")</bold></MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="3">
-            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="border-color:rgba(0, 0, 0, 0.1);  height: 150px;">
-                <h2 style="text-align:center;">Produtos fora de Stock:</h2>
+            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1);  height: 150px;">
+                <h2 style="text-align:center;">Produtos Fora de Stock:</h2>
                 <MudText Style="color:#4d6bfe; text-align:center; font-family:'Lexend'; font-size:68px;"><bold>@($"{productsNotInStock}")</bold></MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="3">
-            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="border-color:rgba(0, 0, 0, 0.1);  height: 150px;">
-                <h2 style="text-align:center;">Quantia total de Stock:</h2>
+            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1);  height: 150px;">
+                <h2 style="text-align:center;">Stock Total Disponível:</h2>
                 <MudText Style="color:#4d6bfe; text-align:center; font-family:'Lexend'; font-size:68px;"><bold>@($"{totalStock}")</bold></MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="3">
-            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="border-color:rgba(0, 0, 0, 0.1);  height: 150px;">
+            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1);  height: 150px;">
                 <h2 style="text-align:center;">Valor Total de Stock</h2>
                 <MudText Style="color:#4d6bfe; text-align:center; font-family:'Lexend'; font-size:68px;"><bold>@($"{totalValue}€")</bold></MudText>
             </MudPaper>
@@ -33,10 +34,29 @@
 
 
         <MudItem xs="12" sm="8">
-            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="border-color:rgba(0, 0, 0, 0.1); height: 500px;"></MudPaper>
+            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1); height: 500px;">
+                <MudText Class="pa-4" Style="text-align:center;" Typo="Typo.h6">Produtos adicionados recentemente</MudText>
+
+                <MudTable Dense="true" Items="@ProductItems.OrderByDescending(p => p.Id).Take(10)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+                    <HeaderContent>
+                        <MudTh>Id</MudTh>
+                        <MudTh>Nome</MudTh>
+                        <MudTh>Marca</MudTh>
+                        <MudTh>Stock</MudTh>
+                        <MudTh>Criado em</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Id">@context.Id</MudTd>
+                        <MudTd DataLabel="Nome">@context.Nome</MudTd>
+                        <MudTd DataLabel="Marca">@context.MarcaNome</MudTd>
+                        <MudTd DataLabel="Stock">@context.QuantidadeDisponivel</MudTd>
+                        <MudTd DataLabel="CreatedAt">@context.IsCreated.ToString("dd/MM/yyyy - HH:mm")h</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="4">
-            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="border-color:rgba(0, 0, 0, 0.1); height: 500px; align-content:center;">
+            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1); height: 500px; align-content:center;">
                 <h2 style="text-align:center;">Principais 5 Categorias com Mais Produtos</h2>
                 <MudChart ChartType="ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="Index" InputData="@data" InputLabels="@labels">
                     <CustomGraphics>
@@ -50,10 +70,39 @@
 
 
         <MudItem xs="12" sm="8">
-            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="border-color:rgba(0, 0, 0, 0.1); height: 500px;"></MudPaper>
+            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1); height: 500px;">
+                <MudText Class="pa-4" Style="text-align:center;" Typo="Typo.h6">Produtos com baixa disponibilidade</MudText>
+                <MudTable Dense="true" Items="@ProductItems.Where(p => p.QuantidadeDisponivel < 5 ).OrderBy(p => p.QuantidadeDisponivel).Take(10)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+                    <HeaderContent>
+                        <MudTh>Id</MudTh>
+                        <MudTh>Nome</MudTh>
+                        <MudTh>Categoria</MudTh>
+                        <MudTh>Marca</MudTh>
+                        <MudTh>Stock</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Id">@context.Id</MudTd>
+                        <MudTd DataLabel="Nome">@context.Nome</MudTd>
+                        <MudTd DataLabel="Marca">@context.CategoriaNome</MudTd>
+                        <MudTd DataLabel="Marca">@context.MarcaNome</MudTd>
+                        <MudTd DataLabel="Stock"><p style="color:@(context.QuantidadeDisponivel == 0 ? "#c70e33" : "#fcba03")">@context.QuantidadeDisponivel</p></MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="4">
-            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="border-color:rgba(0, 0, 0, 0.1); height: 500px;"></MudPaper>
+            <MudPaper Elevation="0" Class="border rounded-xl pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1); height: 500px; align-content:center;">
+                <h2 style="text-align:center; padding-bottom: 15px;"> Média de Preço de Custo por Categoria</h2>
+                <MudStack Wrap="Wrap.Wrap" Spacing="4" Row Style="justify-content:center;" AlignItems="AlignItems.Center">
+                    @foreach (var category in CategoriasItems)
+                    {
+                        <MudPaper Elevation="0" Class="rounded-l pa-4" Style="background-color:rgba(49, 69, 176, 0.02); border-color:rgba(0, 0, 0, 0.1); border-width: 1px 3px 1px 1px; border-right-color:#4d6bfe;">
+                            <h5 style="text-align:center;">@category.CategoriaNome</h5>
+                            <MudText Style="color:#abb2bd; text-align:end; font-family:'Lexend'; font-size:15px;"><bold>@($"{category.PrecoMedio.ToString("#.##")}€")</bold></MudText>
+                        </MudPaper>
+                    }
+                </MudStack>
+            </MudPaper>
         </MudItem>
     </MudGrid>
 </MudContainer>
@@ -65,10 +114,12 @@
     private int totalStock;
     private int productsInStock;
     private int productsNotInStock;
+    private bool _loading = true;
 
     protected override async Task OnParametersSetAsync()
     {
         ProductItems = await WebApi.GetProduto();
+        _loading = false;
         CategoriasItems = await WebApi.GetCategorias();
         totalProducts = ProductItems.Count();
         productsInStock = ProductItems.Where(p => p.QuantidadeDisponivel > 0).Count();
@@ -95,6 +146,7 @@
     private int totalProducts;
     double[] data;
     string[] labels;
+    
 
     private void PopulateDataLabel()
     {
@@ -104,11 +156,11 @@
         labels = new string[categoryFilter.Count() + 1];
 
         int count = 0;
-        foreach (var product in categoryFilter)
+        foreach (var category in categoryFilter)
         {
-            data[count] = product.ProdutoCount;
-            labels[count] = $"{product.CategoriaNome} ({product.ProdutoCount})";
-            totalOtherProducts -= product.ProdutoCount;
+            data[count] = category.ProdutoCount;
+            labels[count] = $"{category.CategoriaNome} ({category.ProdutoCount})";
+            totalOtherProducts -= category.ProdutoCount;
             count++;
         }
 

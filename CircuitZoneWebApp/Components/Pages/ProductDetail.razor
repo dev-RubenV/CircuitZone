@@ -3,7 +3,7 @@
 @inject IWebApi WebApi
 @inject ISnackbar Snackbar
 @rendermode InteractiveServer
-
+<title>Editar Produto</title>
 
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
@@ -46,7 +46,7 @@
                 <MudCard Elevation="0">
                     <MudContainer> 
                     <MudItem Class="d-flex justify-center">
-                        <MudCarousel @ref="_carousel" ItemsSource="@productModel.ImagensUrls" @bind-SelectedIndex="selectedIndex" Style="width:400px; height:400px; border-radius:15px; object-position: center;" ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture" AutoCycle="@_autocycle">
+                            <MudCarousel Class="border-2 rounded-xl" @ref="_carousel" ItemsSource="@productModel.ImagensUrls" @bind-SelectedIndex="selectedIndex" Style=" border-color: #4d6bfe; width:400px; height:400px; object-position: center;" ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture" AutoCycle="@_autocycle">
                                 <BulletTemplate Context="selected">
                                     <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
                                         <span class="mud-icon-button-label">
@@ -75,9 +75,12 @@
                         </MudItem>
                     </MudContainer>
                     <MudCardContent>
-                        <MudText Style="color:#4d6bfe; font-family:'Lexend'; font-size:24px;">@productModel.Nome</MudText>
-                        <MudText Typo="Typo.body2">@productModel.Descricao</MudText>
-                        <MudText Style="color:#4d6bfe; font-family:'Lexend'; font-size:15px;">@($"{productModel.Preco}€")</MudText>
+                        <MudText Class="pb-2" Style="font-family:'Lexend'; font-size:24px;">@productModel.Nome</MudText>
+                        <MudText Class="pb-2" Typo="Typo.h4" Style="color:#4d6bfe; font-family:'Lexend';">@($"{productModel.Preco}€")</MudText>
+                        <MudText Class="pb-2" Style="color:#abb2bd; font-family:'Lexend'; font-size:15px;">@($"Categoria: {productModel.CategoriaNome} | Marca: {productModel.MarcaNome} | EAN: {productModel.CodigoEAN}")</MudText>
+                        <MudText Class="pb-2" Style="color:#abb2bd; font-family:'Lexend'; font-size:15px;">@($"Disponibilidade: {productModel.QuantidadeDisponivel}")</MudText>
+                        <MudText Class="pb-2" Typo="Typo.body2" Style="font-family:'Lexend'">@productModel.Descricao</MudText>
+                        <MudText Class="pb-2" Style="color:#abb2bd; font-family:'Lexend'; font-size:10px;">@($"Criado em {productModel.IsCreated.ToString("dd/MM/yyyy - HH:mm")}h e Ultima Modificação às {productModel.IsUpdated.ToString("dd/MM/yyyy - HH:mm")}h")</MudText>
                     </MudCardContent>
                 </MudCard>
             </MudPaper>
