@@ -32,5 +32,6 @@ namespace CircuitZoneConsumerApi.Models
         public int Id { get; set; }
         public string CategoriaNome { get; set; }
         public int ProdutoCount { get; set; }
+        public decimal PrecoMedio { get; set; }
     }
 }

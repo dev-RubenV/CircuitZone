@@ -38,8 +38,9 @@ namespace CircuitZoneConsumerApi.Controllers
                     CategoriaNome = p.Categoria.Nome,
                     MarcaId = p.Marca.Id,
                     CategoriaId = p.Categoria.Id,
+                    IsCreated = p.IsCreated,
                     ImagensUrls = p.Imagens.Any() ? p.Imagens.Select(p => p.Url).ToList()
-                                  : new List<string> { "/Images/no-image.jpg" }
+                                  : new List<string> { "/Images/no-image.png" }
                 })
                 .ToListAsync();
 
@@ -66,8 +67,10 @@ namespace CircuitZoneConsumerApi.Controllers
                     CategoriaNome = p.Categoria.Nome,
                     MarcaId = p.Marca.Id,
                     CategoriaId = p.Categoria.Id,
+                    IsCreated = p.IsCreated,
+                    IsUpdated = p.IsUpdated,
                     ImagensUrls = p.Imagens.Any() ? p.Imagens.Select(p => p.Url).ToList()
-                                        : new List<string> { "/Images/no-image.jpg" }
+                                        : new List<string> { "/Images/no-image.png" }
                 })
                 .FirstOrDefaultAsync();
 
@@ -81,11 +84,16 @@ namespace CircuitZoneConsumerApi.Controllers
         public async Task<IActionResult> AddProdutos(ProductModel productModel)
         {
             var produto = await _businessContext.Produtos.FirstOrDefaultAsync(t => t.Id.Equals(productModel.Id));
+            var produtoExistente = await _businessContext.Produtos.FirstOrDefaultAsync(p => p.CodigoEAN.Equals(productModel.CodigoEAN));
 
             if (produto is not null)
                 return BadRequest();
-            if (produto.QuantidadeDisponivel < 0)
+
+            if (productModel.QuantidadeDisponivel < 0)
                 return BadRequest("Produto não pode ter stock negativo.");
+
+            if (produtoExistente is not null)
+                return BadRequest("Produto com o mesmo EAN já existe.");
 
             var newProduto = new Produto();
             newProduto.Nome = productModel.Nome;
@@ -163,10 +171,26 @@ namespace CircuitZoneConsumerApi.Controllers
             {
                 Id = c.Id,
                 CategoriaNome = c.Nome,
-                ProdutoCount = _businessContext.Produtos.Where( p => p.IsDeleted == false && p.Nome != null && c.Id == p.CategoriaId)
-                                .Count()
+                ProdutoCount = _businessContext.Produtos.Where(p => p.IsDeleted == false && p.Nome != null && c.Id == p.CategoriaId)
+                                .Count(),
+                PrecoMedio = 0,
             })
             .ToListAsync();
+
+            foreach (var categoria  in categoriasTable)
+            {
+                var produtos = await _businessContext.Produtos.Where(p => p.IsDeleted == false && p.Nome != null && p.CategoriaId == categoria.Id && p.QuantidadeDisponivel > 0).ToListAsync();
+
+                if (categoria.ProdutoCount > 0)
+                {
+                    decimal total = produtos.Sum(p => p.Preco);
+                    categoria.PrecoMedio = total / categoria.ProdutoCount;
+                }
+                else
+                {
+                    categoria.PrecoMedio = 0;
+                }
+            }
 
             return Ok(categoriasTable);
         }
@@ -205,7 +229,7 @@ namespace CircuitZoneConsumerApi.Controllers
                     MarcaNome = p.Marca.NomeMarca,
                     CategoriaNome = p.Categoria.Nome,
                     ImagensUrls = p.Imagens.Any() ? p.Imagens.Select(p => p.Url).ToList()
-                                  : new List<string> { "/Images/no-image.jpg" }
+                                  : new List<string> { "/Images/no-image.png" }
                 })
                 .ToListAsync();
 
