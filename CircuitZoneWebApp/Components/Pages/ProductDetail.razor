@@ -4,36 +4,61 @@
 @inject ISnackbar Snackbar
 @rendermode InteractiveServer
 
-<h2 class="mb-2">Editar Produto</h2>
-
-<EditForm FormName="UpdateProduct" Model="@productModel" OnValidSubmit="UpdateProduct">
-    <MudStack Row Class="justify-space-between mud-width-full">
-        <MudStack Style="width: 800px">
-        <MudTextField Label="Nome" Variant="Variant.Filled" Typo="Typo.subtitle1" @bind-Value="productModel.Nome"/>
-        <MudTextField Label="Descricao" Variant="Variant.Filled" Lines="10" @bind-Value="productModel.Descricao"/>
-        <MudNumericField HideSpinButtons="true" Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" Min="0" />
-        <MudNumericField Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" Min="0"/>
-        <MudTextField Label="Codigo EAN" Variant="Variant.Filled" @bind-Value="productModel.CodigoEAN"/>
 
 
-            <MudSelect @bind-Value="productModel.MarcaId" Variant="Variant.Filled" Placeholder="Seleciona uma marca" Label="Marca">
-                @foreach (var marca in marcasModel)
-                {
-                    <MudSelectItem Value="marca.Id">@marca.NomeMarca</MudSelectItem>
-                }
-            </MudSelect>
+<MudContainer MaxWidth="MaxWidth.False">
+    <MudGrid>
+        <MudItem>
+            <MudPaper Elevation="10" Class="pa-4" Style="height: 1170px; width: 800px; justify-content: center;">
+                <h2 class="mb-2">Editar Produto</h2>
+                <EditForm FormName="UpdateProduct" Model="@productModel" OnValidSubmit="UpdateProduct">
+                    <MudStack Row Class="justify-space-between mud-width-full">
+                        <MudStack Style="width: 800px">
+                            <MudTextField Label="Nome" Variant="Variant.Filled" Typo="Typo.subtitle1" @bind-Value="productModel.Nome" />
+                            <MudTextField Label="Descricao" Variant="Variant.Filled" Lines="10" @bind-Value="productModel.Descricao" />
+                            <MudNumericField HideSpinButtons="true" Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" Min="0" />
+                            <MudNumericField Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" Min="0" />
+                            <MudTextField Label="Codigo EAN" Variant="Variant.Filled" @bind-Value="productModel.CodigoEAN" />
 
-            <MudSelect @bind-Value="productModel.CategoriaId" Variant="Variant.Filled" Placeholder="Seleciona uma categoria" Label="Categoria">
-                @foreach (var categoria in categoriasModel)
-                {
-                    <MudSelectItem Value="categoria.Id">@categoria.CategoriaNome</MudSelectItem>
-                }
-            </MudSelect>
 
-            <MudButton OnClick="UpdateProduct" Variant="Variant.Filled" Color="Color.Primary">Editar Produto</MudButton>
-        </MudStack>
-    </MudStack>
-</EditForm>
+                            <MudSelect @bind-Value="productModel.MarcaId" Variant="Variant.Filled" Placeholder="Seleciona uma marca" Label="Marca">
+                                @foreach (var marca in marcasModel)
+                                {
+                                    <MudSelectItem Value="marca.Id">@marca.NomeMarca</MudSelectItem>
+                                }
+                            </MudSelect>
+
+                            <MudSelect @bind-Value="productModel.CategoriaId" Variant="Variant.Filled" Placeholder="Seleciona uma categoria" Label="Categoria">
+                                @foreach (var categoria in categoriasModel)
+                                {
+                                    <MudSelectItem Value="categoria.Id">@categoria.CategoriaNome</MudSelectItem>
+                                }
+                            </MudSelect>
+
+                            <MudButton OnClick="UpdateProduct" Variant="Variant.Filled" Color="Color.Primary">Editar Produto</MudButton>
+                        </MudStack>
+                    </MudStack>
+                </EditForm>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="12" md="4">
+            <MudPaper Elevation="10" Class="pa-4" Style="height: 200px; width: 1600px; height: 1170px;">
+                <MudCard>
+                    <MudCardMedia Image="" Height="200" />
+                    <MudCardContent>
+                        <MudText Typo="Typo.h5">@productModel.Nome</MudText>
+                        <MudText Typo="Typo.body2">@productModel.Descricao</MudText>
+                        <MudText Typo="Typo.body2">@productModel.Preco</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary">Share</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
 
 @code {
     [Parameter]

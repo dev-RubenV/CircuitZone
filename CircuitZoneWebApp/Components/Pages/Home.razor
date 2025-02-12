@@ -1,24 +1,67 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@inject IWebApi WebApi
+@using CircuitZoneConsumerApi.Models;
 @* @inject IWebApi WebApi; *@
 
+<MudContainer MaxWidth="MaxWidth.False">
+    <MudGrid>
+        <MudItem>
+            <MudPaper Elevation="10" Class="pa-4" Style="background-color:rgba(0, 0, 0, 0.1); height: 1170px; width: 600px;">
+            </MudPaper>
+        </MudItem>
+        <MudItem>
+            <MudPaper Elevation="10" Class="mb-5" Style="background-color:rgba(0, 0, 0, 0.1); align-content:center; height: 575px; width: 350px;">
+                <h2 style="text-align:center;">Valor Total de Stock</h2>
+                <MudText style="color:#4d6bfe; text-align:center; font-family:'Lexend'; font-size:68px;"><bold>@($"{totalValue}€")</bold></MudText>
+            </MudPaper>
+            <MudItem xs="16" sm="16" md="8">
+                <MudPaper Elevation="10" Class="pa-4" Style="background-color:rgba(0, 0, 0, 0.1); align-content:center; height: 575px; width: 350px;">
+                    <h2 style="text-align:center;">Produtos por Categoria</h2>
+                    <MudChart ChartType="ChartType.Donut" LegendPosition="@LegendPosition" Width="300px" Height="300px"
+                    InputData="@data" InputLabels="@labels">
+                    </MudChart>
+                </MudPaper>
+            </MudItem>
+        </MudItem>
+        <MudItem xs="12" sm="12" md="4">
+            <MudPaper Elevation="10" Class="mb-5" Style="background-color:rgba(0, 0, 0, 0.1); height: 200px; width: 1410px; height: 600px;">
 
-<MudText Typo="Typo.h6">MudBlazor is @Text</MudText>
-<MudButton Variant="Variant.Filled" Class="custom-button" OnClick="ButtonOnClick">@ButtonText</MudButton>
+            </MudPaper>
+            <MudPaper Elevation="10" Class="pa-4" Style="background-color:rgba(0, 0, 0, 0.1); height: 200px; width: 1410px; height: 550px;">
+
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
 
 
 
 @code {
-    public string Text { get; set; } = "????";
-    public string ButtonText { get; set; } = "Click Me";
-    public int ButtonClicked { get; set; }
+    List<ProductModel> ProductItems { get; set; } = new();
+    private decimal totalValue;
 
-    void ButtonOnClick()
+    protected override async Task OnParametersSetAsync()
     {
-        ButtonClicked += 1;
-        Text = $"Awesome x {ButtonClicked}";
-        ButtonText = "Click Me Again";
+        ProductItems = await WebApi.GetProduto();
+        GetInventoryValue();
     }
+
+    private void GetInventoryValue()
+    {
+        totalValue = 0;
+
+        foreach (var product in ProductItems)
+        {
+            totalValue += product.Preco;
+        }
+    }
+
+
+    //Mudblazor pie placeholder - delete later
+    public double[] data = { 25, 77, 28, 5 };
+    public string[] labels = { "Oil", "Coal", "Gas", "Biomass" };
+    public Position LegendPosition { get; set; } = Position.Bottom;
 }
 
 

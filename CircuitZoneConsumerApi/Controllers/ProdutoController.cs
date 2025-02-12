@@ -144,7 +144,7 @@ namespace CircuitZoneConsumerApi.Controllers
             return Ok(categoriasTable);
         }
 
-[HttpDelete("/deleteproduto")]
+        [HttpDelete("/deleteproduto")]
         public async Task<IActionResult> DeleteProduto(int id)
         {
             var produto = await _businessContext.Produtos.FirstOrDefaultAsync(t => t.Id.Equals(id));
@@ -152,7 +152,7 @@ namespace CircuitZoneConsumerApi.Controllers
             if (produto is null)
                 return BadRequest();
 
-            produto.IsDeleted = true;
+            produto.IsDeleted = !produto.IsDeleted;
 
             var result = await _businessContext.SaveChangesAsync();
 
@@ -161,7 +161,45 @@ namespace CircuitZoneConsumerApi.Controllers
 
             return BadRequest();
         }
+        
+        [HttpGet("/deleted-produtos")]
+        public async Task<IActionResult> GetDeletedProduct()
+        {
+            var productTable = await _businessContext.Produtos
+                .Where(p => p.IsDeleted == true)
+                .Select(p => new ProductModel
+                {
+                    Id = p.Id,
+                    Nome = p.Nome,
+                    Descricao = p.Descricao,
+                    Preco = p.Preco,
+                    CodigoEAN = p.CodigoEAN,
+                    QuantidadeDisponivel = p.QuantidadeDisponivel,
+                    MarcaNome = p.Marca.NomeMarca,
+                    CategoriaNome = p.Categoria.Nome,
+                    ImagensUrls = p.Imagens.Any() ? p.Imagens.Select(p => p.Url).ToList()
+                                  : new List<string> { "/Images/no-image.jpg" }
+                })
+                .ToListAsync();
+
+            if (productTable is null)
+                return NotFound();
+            else
+                return Ok(productTable);
+        }
+
+        [HttpGet("/getsingledeletedproduto")]
+        public async Task<IActionResult> GetSingleDeletedProduct(int id)
+        {
+            var product = await _businessContext.Produtos.FirstOrDefaultAsync(p => p.IsDeleted == true && p.Id.Equals(id));
+
+            if (product is null)
+                return NotFound();
+            else
+                return Ok(product);
+        }
     }
+
 
 
 }
