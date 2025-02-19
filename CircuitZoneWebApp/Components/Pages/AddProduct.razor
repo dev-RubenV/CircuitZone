@@ -33,8 +33,16 @@
                                     <MudSelectItem Value="categoria.Id">@categoria.CategoriaNome</MudSelectItem>
                                 }
                             </MudSelect>
-
-                            <MudButton OnClick="SaveProduct" Variant="Variant.Filled" Color="Color.Primary">Adicionar Produto</MudButton>
+                            @if (productModel.ImagensUrls != null)
+                            {
+                                @foreach (var url in productModel.ImagensUrls.Select((value, index) => new { value, index }))
+                                {
+                                    var currentIndex = url.index;
+                                    <MudTextField Label="Imagem URL" Variant="Variant.Filled" Clearable="true" Typo="Typo.subtitle1" @bind-Value="productModel.ImagensUrls[currentIndex]" />
+                                }
+                            }
+                            <MudButton OnClick="AddImageUrl" Variant="Variant.Filled" Color="Color.Secondary">Adicionar Mais Imagens</MudButton>
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Adicionar Produto</MudButton>
                         </MudStack>
                     </MudStack>
                 </EditForm>
@@ -56,6 +64,11 @@
         categoriasModel = await WebApi.GetCategorias();
         productModel.MarcaId = marcasModel.FirstOrDefault().Id;
         productModel.CategoriaId = categoriasModel.FirstOrDefault().Id;
+        if (productModel.ImagensUrls == null)
+        {
+            productModel.ImagensUrls = new List<string>();
+        }
+        StateHasChanged();
     }
 
     private async Task SaveProduct()
@@ -64,7 +77,6 @@
         productModel.IsCreated = DateTime.Now;
         productModel.IsUpdated = DateTime.Now;
         productModel.IsDeleted = false;
-        productModel.ImagensUrls = new List<string> { "/Images/no-image.png" };
 
         try
         {
@@ -76,5 +88,14 @@
         {
             Snackbar.Add($"Erro {ex.Message}", Severity.Error);
         }
+    }
+
+    private void AddImageUrl()
+    {
+        if (productModel.ImagensUrls == null)
+        {
+            productModel.ImagensUrls = new List<string>();
+        }
+        productModel.ImagensUrls.Add(string.Empty);
     }
 }

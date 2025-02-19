@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IWebApi WebApi
+@inject NavigationManager NavigationManager
 @using CircuitZoneConsumerApi.Models
 <link rel="icon" type="image/x-icon" href="/circuitzone.ico"
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="MyCustomTheme"/>
@@ -11,27 +12,41 @@
     <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
         <MudImage src="@(_isDarkMode ? "/Images/circuitzone_logo.svg" : "/Images/circuitzone_logo_light.svg")" style="height: 28px; width: auto; margin-left: 1rem;"
-        alt="CircuitZone Logo">
+        alt="CircuitZone Logo"
+        @onclick="@(()=>NavigationManager.NavigateTo("/"))">
         </MudImage>
         <MudSpacer />
         <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Filled.WbSunny" Color="@Color.Warning" ToggledColor="@Color.Secondary" />
         <MudSwitch @bind-Value="@_isDarkMode" Color="Color.Primary" UncheckedColor="Color.Warning" />
         <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Default" ToggledColor="@Color.Primary" />
-
+        <MudChip T="string" Color="Color.Primary">
+            <AvatarContent>
+                <MudAvatar>U</MudAvatar>
+            </AvatarContent>
+            <ChildContent>Hello, User!</ChildContent>
+        </MudChip>
     </MudAppBar>
     <MudPaper Elevation="25" Style="flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
         <MudDrawerContainer Class="mud-height-full">
             <MudDrawer @bind-Open="@_open" Style="font-family: Lexend;" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
                 <MudNavMenu Class="custom-theme-active">
-                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-
-                    <MudNavLink Href="/produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.DataUsage">Dashboard</MudNavLink>
+                    <MudNavGroup Icon="@Icons.Material.Filled.Store" Title="Produtos" Expanded="true">
+                        <MudNavLink Href="/produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.ShoppingCart">
                         <MudBadge Origin="Origin.CenterRight" Content="@_productCount" Color="Color.Primary" Overlap="false" Class="pr-2">
                             Produtos
                         </MudBadge>
                     </MudNavLink>
+                        <MudNavLink Href="/adicionar-produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.AddToPhotos">Adicionar Produto</MudNavLink>
+                        <MudNavLink Href="/lixo-produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Delete">Lixo</MudNavLink>
 
-                    <MudNavLink Href="/adicionar-produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Adicionar Produto</MudNavLink>
+                    </MudNavGroup>
+                    <MudNavGroup Icon="@Icons.Material.Filled.TrendingUp" Title="Movimentos" Expanded="false">
+                        <MudNavLink Href="/entrada-stock" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.AddCircle">Entradas de Stock</MudNavLink>
+                        <MudNavLink Href="/saida-stock" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.RemoveCircle">Saídas de Stock</MudNavLink>
+                        <MudNavLink Href="/lixo-produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.History">Histórico de Movimentos</MudNavLink>
+
+                    </MudNavGroup>
                     <MudNavLink Href="/adduser" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Adicionar User</MudNavLink>
 
 
@@ -49,6 +64,7 @@
 
 @code
 {
+
     private int _productCount = 0;
 
     List<ProductModel> ProductItems { get; set; } = new();

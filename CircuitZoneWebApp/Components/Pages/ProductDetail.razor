@@ -5,13 +5,13 @@
 @rendermode InteractiveServer
 <title>Editar Produto</title>
 
-
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudGrid>
         <MudItem>
             <MudPaper Elevation="10" Class="pa-4" Style="height: 1170px; justify-content: center;">
                 <h2 class="mb-2">Editar Produto</h2>
                 <EditForm FormName="UpdateProduct" Model="@productModel" OnValidSubmit="UpdateProduct">
+                    <ValidationSummary />
                     <MudStack Row Class="justify-space-between mud-width-full">
                         <MudStack Style="width: 800px">
                             <MudTextField Label="Nome" Variant="Variant.Filled" Typo="Typo.subtitle1" @bind-Value="productModel.Nome" />
@@ -19,7 +19,6 @@
                             <MudNumericField HideSpinButtons="true" Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" Min="0" />
                             <MudNumericField Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" Min="0" />
                             <MudTextField Label="Codigo EAN" Variant="Variant.Filled" @bind-Value="productModel.CodigoEAN" />
-
 
                             <MudSelect @bind-Value="productModel.MarcaId" Variant="Variant.Filled" Placeholder="Seleciona uma marca" Label="Marca">
                                 @foreach (var marca in marcasModel)
@@ -34,8 +33,18 @@
                                     <MudSelectItem Value="categoria.Id">@categoria.CategoriaNome</MudSelectItem>
                                 }
                             </MudSelect>
+                            @if (productModel.ImagensUrls != null)
+                            {
+                                @foreach (var url in productModel.ImagensUrls.Select((value, index) => new { value, index }))
+                                {
+                                    var currentIndex = url.index;
+                                    <MudTextField Label="Imagem URL" Variant="Variant.Filled" Clearable="true" Typo="Typo.subtitle1" @bind-Value="productModel.ImagensUrls[currentIndex]" />
+                                }
+                            }
 
-                            <MudButton OnClick="UpdateProduct" Variant="Variant.Filled" Color="Color.Primary">Editar Produto</MudButton>
+                            <MudButton OnClick="AddImageUrl" Variant="Variant.Filled" Color="Color.Secondary">Adicionar Mais Imagens</MudButton>
+
+                            <MudButton ButtonType="ButtonType.Submit" OnClick="UpdateProduct" Variant="Variant.Filled" Color="Color.Primary">Editar Produto</MudButton>
                         </MudStack>
                     </MudStack>
                 </EditForm>
@@ -44,8 +53,8 @@
         <MudItem xs="12" sm="12" md="4">
             <MudPaper Elevation="10" Class="pa-4" Style="height: 1170px;">
                 <MudCard Elevation="0">
-                    <MudContainer> 
-                    <MudItem Class="d-flex justify-center">
+                    <MudContainer>
+                        <MudItem Class="d-flex justify-center">
                             <MudCarousel Class="border-2 rounded-xl" @ref="_carousel" ItemsSource="@productModel.ImagensUrls" @bind-SelectedIndex="selectedIndex" Style=" border-color: #4d6bfe; width:400px; height:400px; object-position: center;" ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture" AutoCycle="@_autocycle">
                                 <BulletTemplate Context="selected">
                                     <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
@@ -68,9 +77,9 @@
                                         </span>
                                     </div>
                                 </NextButtonTemplate>
-                            <ItemTemplate Context="image">
-                                <MudImage Src="@image" Alt="@productModel.Nome" ObjectFit="ObjectFit.Cover" Height="400" Width="400" />
-                            </ItemTemplate>
+                                <ItemTemplate Context="image">
+                                    <MudImage Src="@image" Alt="@productModel.Nome" ObjectFit="ObjectFit.Cover" Height="400" Width="400" />
+                                </ItemTemplate>
                             </MudCarousel>
                         </MudItem>
                     </MudContainer>
@@ -88,11 +97,7 @@
     </MudGrid>
 </MudContainer>
 
-
-
-
 @code {
-
     [Parameter]
     public int Id { get; set; }
 
@@ -103,6 +108,10 @@
     protected override async Task OnParametersSetAsync()
     {
         productModel = await WebApi.GetSingleProduct(Id);
+        if (productModel.ImagensUrls == null)
+        {
+            productModel.ImagensUrls = new List<string>();
+        }
     }
 
     private async Task UpdateProduct()
@@ -125,28 +134,20 @@
         categoriasModel = await WebApi.GetCategorias();
     }
 
+    private void AddImageUrl()
+    {
+        if (productModel.ImagensUrls == null)
+        {
+            productModel.ImagensUrls = new List<string>();
+        }
+        productModel.ImagensUrls.Add(string.Empty);
+    }
+
     //MudCarousel
-    private MudCarousel<string> _carousel;
+    private MudCarousel<string>? _carousel;
     private bool _arrows = true;
     private bool _bullets = true;
     private bool _enableSwipeGesture = true;
     private bool _autocycle = true;
     private int selectedIndex = 0;
-
-    private async Task AddAsync()
-    {
-        productModel.ImagensUrls.Add($"Item {productModel.ImagensUrls.Count + 1}");
-        await Task.Delay(1);
-        _carousel.MoveTo(productModel.ImagensUrls.Count - 1);
-    }
-
-    private async Task DeleteAsync(int index)
-    {
-        if (productModel.ImagensUrls.Any())
-        {
-            productModel.ImagensUrls.RemoveAt(index);
-            await Task.Delay(1);
-            _carousel.MoveTo(System.Math.Max(System.Math.Min(index, productModel.ImagensUrls.Count - 1), 0));
-        }
-    }
 }
