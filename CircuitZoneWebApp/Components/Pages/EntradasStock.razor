@@ -1,0 +1,109 @@
+﻿@page "/entrada-stock"
+@using CircuitZoneConsumerApi.Models;
+@using MudBlazor;
+@inject IWebApi WebApi
+@inject ISnackbar Snackbar
+@rendermode InteractiveServer
+
+<title>Entradas de Stock</title>
+
+@*  Step 1 *@
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudPaper Style="width: 800px">
+
+        <MudContainer Class="pb-4 pt-4" MaxWidth="MaxWidth.ExtraLarge">
+            <h2 class="mb-2">Selecione Produto para adicionar Stock</h2>
+            <MudAutocomplete T="ProductModel" @bind-Value="selectedProduct" SearchFunc="SearchProducts" ToStringFunc="@(p => p?.Nome)" Variant="Variant.Filled" Placeholder="Seleciona um Produto" Label="Produtos" onselect="@GetForm(selectedProduct.Id)" />
+        </MudContainer>
+        <MudDivider />
+        <MudCollapse Expanded="_expanded">
+            <MudItem Class="pt-4 pr-4 pl-4">
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <div class="card flex-md-row mb-4 box-shadow h-md-250 d-flex flex-row">
+                        <div class="card-body d-flex flex-column align-items-start pr-2">
+                                <strong class="d-inline-block mb-1 text-primary" style="color:#4d6bfe">@selectedProduct.CategoriaNome</strong>
+                            <h3 class="mb-0">
+                                @selectedProduct.Nome
+                            </h3>
+                            <div class="mb-1 text-muted" style="color:#abb2bd">@selectedProduct.MarcaNome</div>
+                            <p class="card-text mb-auto pb-1">@((selectedProduct.Descricao?.Length > 325) ? selectedProduct.Descricao.Substring(0, 325) + "..." : selectedProduct.Descricao)</p>
+                             <EditForm Model="@selectedProduct" OnValidSubmit="UpdateStock">
+                            <MudSlider @bind-Value="stockQuantity" Min="0" Max="200" Color="Color.Primary">Adicionar Stock:</MudSlider>
+                            <MudNumericField @bind-Value="stockQuantity" Label="Stock a adicionar" Variant="Variant.Outlined" />
+                            <p class="pa-1 pb-2">@(selectedProduct.QuantidadeDisponivel == 0 ? "Fora de Stock" : $"Stock atual: {selectedProduct.QuantidadeDisponivel}")</p>
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Adicionar</MudButton>
+                            </EditForm>
+                        </div>
+                        <div class="card-img-right flex-auto d-none d-md-block" style="background-color:white; align-content:center; border-top-right-radius:10px; border-bottom-right-radius:10px;" width="200px" height="250px">
+                        <MudImage Src="@selectedProduct.ImagensUrls.FirstOrDefault()" Alt="@($"Imagem de {selectedProduct.Nome}")" Width="150" Height="150" ObjectFit="ObjectFit.Cover" Style="margin-left: auto;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </MudItem>
+        </MudCollapse>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private List<ProductModel> products = new List<ProductModel>();
+    private ProductModel selectedProduct { get; set; } = new();
+    private ProductModel productForm { get; set; } = new();
+    private bool _expanded = false;
+    public int stockQuantity = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await WebApi.GetProduto();
+    }
+
+    private async Task<IEnumerable<ProductModel>> SearchProducts(string value, CancellationToken token)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
+
+        // if text is null or empty, show complete list
+        if (string.IsNullOrEmpty(value))
+            return products;
+
+        return products.Where(x => x.Nome.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private async Task GetForm(int Id)
+    {
+        productForm = await WebApi.GetSingleProduct(Id);
+        
+        if(_expanded == false)
+        {
+        _expanded = true;
+        StateHasChanged();
+        }
+    }
+
+    private async Task UpdateStock()
+    {
+        try
+        {
+            var result = await WebApi.AddStock(selectedProduct.Id, stockQuantity);
+            Console.WriteLine($"Debug Response: {result}");
+            Snackbar.Add($"Produto editado com sucesso", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro {ex.Message}", Severity.Error);
+        }
+    }
+
+    //MudCarousel
+    private MudCarousel<string>? _carousel;
+    private bool _arrows = true;
+    private bool _bullets = true;
+    private bool _enableSwipeGesture = true;
+    private bool _autocycle = true;
+    private int selectedIndex = 0;
+    
+
+}

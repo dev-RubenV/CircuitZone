@@ -32,6 +32,12 @@ namespace CircuitZoneWebApp
         
         [Get("/getsingledeletedproduto")]
         Task<ProductModel> GetSingleDeletedProduct(int id);
+        
+        [Post("/entrada-stock")]
+        Task<MovementsModel> AddStock(int productId, int quantity);
+        
+        [Post("/saida-stock")]
+        Task<MovementsModel> RemoveStock(int productId, int quantity);
 
     }
 }

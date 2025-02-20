@@ -69,8 +69,7 @@ namespace CircuitZoneConsumerApi.Controllers
                     CategoriaId = p.Categoria.Id,
                     IsCreated = p.IsCreated,
                     IsUpdated = p.IsUpdated,
-                    ImagensUrls = p.Imagens.Any() ? p.Imagens.Select(p => p.Url).ToList()
-                                        : new List<string> { "/Images/no-image.png" }
+                    ImagensUrls = p.Imagens.Select(p => p.Url).ToList(),
                 })
                 .FirstOrDefaultAsync();
 
@@ -105,7 +104,10 @@ namespace CircuitZoneConsumerApi.Controllers
             newProduto.QuantidadeDisponivel = productModel.QuantidadeDisponivel;
             newProduto.IsDeleted = false;
             newProduto.IsCreated = DateTime.Now;
-            //newProduto.Imagens = productModel.ImagensUrls;
+            newProduto.Imagens = productModel.ImagensUrls
+            .Where(url => !string.IsNullOrEmpty(url))
+            .Select(url => new Imagem { Url = url })
+            .ToList();
 
             _businessContext.Produtos.Add(newProduto);
 
@@ -120,7 +122,7 @@ namespace CircuitZoneConsumerApi.Controllers
         [HttpPut("/editproduto")]
         public async Task<IActionResult> EditProduto(ProductModel productModel)
         {
-            var produto = await _businessContext.Produtos.FirstOrDefaultAsync(t => t.Id.Equals(productModel.Id));
+            var produto = await _businessContext.Produtos.Include(p => p.Imagens).FirstOrDefaultAsync(t => t.Id.Equals(productModel.Id));
 
             if (produto is null)
                 return BadRequest();
@@ -136,11 +138,15 @@ namespace CircuitZoneConsumerApi.Controllers
             produto.CodigoEAN = productModel.CodigoEAN;
             produto.QuantidadeDisponivel = productModel.QuantidadeDisponivel;
             produto.IsUpdated = DateTime.Now;
-            //produto.Imagem = productModel.Imagem;
+            produto.Imagens.Clear();
+            produto.Imagens = productModel.ImagensUrls
+                .Where(url => !string.IsNullOrEmpty(url))
+                .Select(url => new Imagem { Url = url })
+                .ToList();
 
             var result = await _businessContext.SaveChangesAsync();
 
-            if (result.Equals(1))
+            if (result > 0)
                 return Ok();
 
             return BadRequest();
@@ -183,7 +189,11 @@ namespace CircuitZoneConsumerApi.Controllers
 
                 if (categoria.ProdutoCount > 0)
                 {
-                    decimal total = produtos.Sum(p => p.Preco);
+                    decimal total = 0;
+                    foreach (var produto in produtos)
+                    {
+                        total += produto.Preco;
+                    }
                     categoria.PrecoMedio = total / categoria.ProdutoCount;
                 }
                 else
