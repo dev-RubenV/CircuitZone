@@ -20,6 +20,12 @@ namespace CircuitZoneWebApp
 
         [Post("/adicionar-produto")]
         Task<HttpResponseMessage> AddProduto([FromBody] ProductModel productModel);
+        
+        [Post("/adicionar-categoria")]
+        Task<HttpResponseMessage> AddCategoria([FromBody] CategoriasModel categoriaModel);
+
+        [Post("/adicionar-marca")]
+        Task<HttpResponseMessage> AddMarca([FromBody] MarcasModel marcaModel);
 
         [Delete("/deleteproduto")]
         Task<HttpResponseMessage> DeleteProduto(int id);
@@ -38,6 +44,12 @@ namespace CircuitZoneWebApp
         
         [Post("/saida-stock")]
         Task<MovementsModel> RemoveStock(int productId, int quantity);
+        
+        [Get("/get-movimentos")]
+        Task<List<MovementsModel>> GetMovimentos();
+
+        [Get("/get-movimento")]
+        Task<MovementsModel> GetSingleMovimento(int id);
 
     }
 }

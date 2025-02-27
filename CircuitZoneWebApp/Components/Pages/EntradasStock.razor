@@ -7,10 +7,10 @@
 
 <title>Entradas de Stock</title>
 
+<MudText Class="mb-2" Typo="Typo.h5" Color="Color.Primary" Style="font-family: Lexend; font-weight:500;">Adicionar Stock</MudText>
 @*  Step 1 *@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudPaper Style="width: 800px">
-
         <MudContainer Class="pb-4 pt-4" MaxWidth="MaxWidth.ExtraLarge">
             <h2 class="mb-2">Selecione Produto para adicionar Stock</h2>
             <MudAutocomplete T="ProductModel" @bind-Value="selectedProduct" SearchFunc="SearchProducts" ToStringFunc="@(p => p?.Nome)" Variant="Variant.Filled" Placeholder="Seleciona um Produto" Label="Produtos" onselect="@GetForm(selectedProduct.Id)" />

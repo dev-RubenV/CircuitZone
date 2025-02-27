@@ -1,0 +1,106 @@
+﻿@page "/historico-movimentos"
+@rendermode InteractiveServer
+@inject IWebApi WebApi
+@using CircuitZoneConsumerApi.Models
+@using System.Net.Http.Json
+@using System.Threading
+@inject HttpClient httpClient
+<title>Histórico de Movimentos</title>
+
+<MudText Class="mb-2" Typo="Typo.h5" Color="Color.Primary" Style="font-family: Lexend; font-weight:500;">Histórico de Movimentos</MudText>
+<MudTable Items="@Movimentos" Hover="true" SortLabel="Sort By" Loading="@_loading" LoadingProgressColor="Color.Primary">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel Enabled="false" SortBy="new Func<MovementsModel, object>(x=>x.TipoMovimentoId)">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel Enabled="true" SortBy="new Func<MovementsModel, object>(x=>x.TipoMovimento)">Tipo Movimento</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel Enabled="true" SortBy="new Func<MovementsModel, object>(x=>x.ProdutoNome)">Produto</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel Enabled="true" SortBy="new Func<MovementsModel, object>(x=>x.Quantidade)">Quantidade</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" Enabled="true" SortBy="new Func<MovementsModel, object>(x=>x.DataMovimento)">Data</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @if(context.TipoMovimentoId == 1)
+        {
+            <MudTd Style="border-left-width:2px; border-left-color:rgba(0,200,0,0.9)" DataLabel="Id">@context.Id</MudTd>
+        }
+        else
+        {
+            <MudTd Style="border-left-width:2px; border-left-color:rgba(244, 0, 0, 0.9)" DataLabel="Id">@context.Id</MudTd>
+        }
+        <MudTd DataLabel="Tipo">@context.TipoMovimento</MudTd>
+        <MudTd DataLabel="Nome Produto" Style="vertical-align: middle;"><MudImage Style="vertical-align: middle;" Width="35" Class="rounded-circle mr-4" src="@context.ImagemThumbnail"></MudImage>@context.ProdutoNome</MudTd>
+        <MudTd DataLabel="Quantidade">@context.Quantidade</MudTd>
+        <MudTd DataLabel="Data Movimento">@context.DataMovimento</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[] { 25, 50, 100, int.MaxValue }" />
+    </PagerContent>
+</MudTable>
+
+@* <MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="justify-content: center;">
+    <MudText Class="mb-2" Typo="Typo.h5" Color="Color.Primary" Style="font-family: Lexend; font-weight:500;">Histórico de Movimentos</MudText>
+        <MudGrid>
+            <MudItem>
+                <MudPaper Elevation="10" Class="pa-4" Style="justify-content: center;">
+
+    <h4>Movimentos de Entrada</h4>
+@foreach(var movimento in Movimentos.Where(m => m.TipoMovimentoId.Equals(1)))
+{
+    <MudCard Class="pa-3 mb-2 rounded-xl" Style="border-bottom-width:2px; border-bottom-color:green; width:500px; height:auto;">
+        <MudCardHeader>
+            <CardHeaderAvatar>
+                <MudImage Class="rounded-circle border-1" Style="border-color:green; border-width:1px;" Width="50" src="@movimento.ImagemThumbnail"></MudImage>
+            </CardHeaderAvatar>
+            <CardHeaderContent>
+                <MudText Color="Color.Primary" Typo="Typo.body1">@movimento.ProdutoNome</MudText>
+                <MudText Typo="Typo.body2">@($"{movimento.TipoMovimento} de Stock: {movimento.Quantidade}")</MudText>
+            </CardHeaderContent>
+            <CardHeaderActions>
+                <MudText>@movimento.DataMovimento.ToString("dd/MM/yyyy - HH:mm")</MudText>
+            </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body2">@movimento.TipoMovimento de Produto</MudText>
+        </MudCardContent>
+    </MudCard>
+}
+            </MudPaper>
+            </MudItem>
+        <MudItem>
+            <MudPaper Elevation="10" Class="pa-4" Style="justify-content: center;">
+    <h4>Movimentos de Saída</h4>
+    @foreach (var movimento in Movimentos.Where(m => m.TipoMovimentoId.Equals(2)))
+    {
+        <MudCard Class="pa-3 mb-2 rounded-xl" Style="border-bottom-width:2px; border-bottom-color:red; width:500px; height:auto;">
+            <MudCardHeader>
+                <CardHeaderAvatar>
+                <MudImage Class="rounded-circle border-1" Style="border-color:red; border-width:1px;" Width="50" src="@movimento.ImagemThumbnail"></MudImage>
+                </CardHeaderAvatar>
+                <CardHeaderContent>
+                    <MudText Color="Color.Primary" Typo="Typo.body1">@movimento.ProdutoNome</MudText>
+                    <MudText Typo="Typo.body2">@($"{movimento.TipoMovimento} de Stock: {movimento.Quantidade}")</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudText>@movimento.DataMovimento.ToString("dd/MM/yyyy - HH:mm")</MudText>
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body2">@movimento.TipoMovimento de Produto</MudText>
+            </MudCardContent>
+        </MudCard>
+    }
+            </MudPaper>
+        </MudItem>
+        </MudGrid>
+</MudContainer>
+ *@
+@code {
+    List<MovementsModel> Movimentos { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Movimentos = await WebApi.GetMovimentos();
+        _loading = false;
+    }
+
+    //MudTable
+    private bool _loading = true;
+}

@@ -18,14 +18,14 @@
 
     <MudTable Items="@ProductItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Primary">
         <HeaderContent>
-            <MudTh Style="text-align:center"><h4>#</h4></MudTh>
-            <MudTh Style="text-align:center"><h3>Imagem</h3></MudTh>
-            <MudTh Style="text-align:center"><h4>Nome</h4></MudTh>
+            <MudTh Style="text-align:center"><MudTableSortLabel Enabled="true" SortBy="new Func<ProductModel, object>(x=>x.Id)"><h4>#</h4></MudTableSortLabel></MudTh>
+            <MudTh Style="text-align:center"><h4>Imagem</h4></MudTh>
+        <MudTh Style="text-align:center"><MudTableSortLabel Enabled="true" SortBy="new Func<ProductModel, object>(x=>x.Nome)"><h4>Nome</h4></MudTableSortLabel></MudTh>
             <MudTh Style="text-align:center"><h4>Descrição</h4></MudTh>
-            <MudTh Style="text-align:center"><h4>Preço</h4></MudTh>
-            <MudTh Style="text-align:center"><h4>Stock</h4></MudTh>
-            <MudTh Style="text-align:center"><h4>Marca</h4></MudTh>
-            <MudTh Style="text-align:center"><h4>Categoria</h4></MudTh>
+            <MudTh Style="text-align:center"><MudTableSortLabel Enabled="true" SortBy="new Func<ProductModel, object>(x=>x.Preco)"><h4>Preço</h4></MudTableSortLabel></MudTh>
+            <MudTh Style="text-align:center"><MudTableSortLabel Enabled="true" SortBy="new Func<ProductModel, object>(x=>x.QuantidadeDisponivel)"><h4>Stock</h4></MudTableSortLabel></MudTh>
+            <MudTh Style="text-align:center"><MudTableSortLabel Enabled="true" SortBy="new Func<ProductModel, object>(x=>x.MarcaNome)"><h4>Marca</h4></MudTableSortLabel></MudTh>
+            <MudTh Style="text-align:center"><MudTableSortLabel Enabled="true" SortBy="new Func<ProductModel, object>(x=>x.CategoriaNome)"><h4>Categoria</h4></MudTableSortLabel></MudTh>
             <MudTh Style="text-align:center"><h4>EAN</h4></MudTh>
             <MudTh Style="text-align:center"><h4>Editar</h4></MudTh>
             <MudTh Style="text-align:center"><h4>Remover</h4></MudTh>
