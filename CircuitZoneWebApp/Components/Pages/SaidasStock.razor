@@ -3,6 +3,7 @@
 @using MudBlazor;
 @inject IWebApi WebApi
 @inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <title>Saídas de Stock</title>
@@ -87,13 +88,11 @@
 
     private async Task UpdateStock()
     {
-        try
-        {
+        try{
             var result = await WebApi.RemoveStock(selectedProduct.Id, stockQuantity);
-            Console.WriteLine($"Debug Response: {result}");
-            Snackbar.Add($"Stock removido com sucesso", Severity.Success);
+            Snackbar.Add($"Retirado {stockQuantity} de stock ao produto com sucesso.", Severity.Success);
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             Snackbar.Add($"Erro {ex.Message}", Severity.Error);
         }

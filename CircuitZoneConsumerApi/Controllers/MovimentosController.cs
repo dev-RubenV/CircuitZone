@@ -103,8 +103,8 @@ namespace CircuitZoneConsumerApi.Controllers
             var result = await _businessContext.SaveChangesAsync();
 
             if (result > 0)
-                return Ok(result);
-            return BadRequest(result);
+                return Ok(newMovement);
+            return BadRequest("Falha ao adicionar stock");
         }
 
         [HttpPost("/saida-stock")]
@@ -143,8 +143,8 @@ namespace CircuitZoneConsumerApi.Controllers
             var result = await _businessContext.SaveChangesAsync();
 
             if (result > 0)
-                return Ok(result);
-            return BadRequest(result);
+                return Ok(newMovement);
+            return BadRequest("Falha ao retirar stock");
         }
     }
 }

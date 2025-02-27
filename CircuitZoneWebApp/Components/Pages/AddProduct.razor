@@ -16,11 +16,11 @@
                 <EditForm Model="@productModel" OnValidSubmit="SaveProduct">
                     <MudStack Row Class="justify-space-between mud-width-full">
                         <MudStack Style="width: 800px">
-                            <MudTextField OnlyValidateIfDirty="false" Label="Nome" Variant="Variant.Filled" Typo="Typo.subtitle1" @bind-Value="productModel.Nome" />
-                            <MudTextField OnlyValidateIfDirty="false" Label="Descricao" Variant="Variant.Filled" Lines="10" @bind-Value="productModel.Descricao" />
-                            <MudNumericField OnlyValidateIfDirty="false" HideSpinButtons="true" Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" Min="0" />
-                            <MudNumericField OnlyValidateIfDirty="false" Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" Min="0" />
-                            <MudTextField OnlyValidateIfDirty="false" Label="Codigo EAN" Variant="Variant.Filled" @bind-Value="productModel.CodigoEAN" />
+                            <MudTextField OnlyValidateIfDirty="false" Required="true" Label="Nome" Variant="Variant.Filled" Typo="Typo.subtitle1" @bind-Value="productModel.Nome" />
+                            <MudTextField OnlyValidateIfDirty="false" Required="true" Label="Descricao" Variant="Variant.Filled" Lines="10" @bind-Value="productModel.Descricao" />
+                            <MudNumericField OnlyValidateIfDirty="false" Required="true" HideSpinButtons="true" Label="Preco" Variant="Variant.Filled" @bind-Value="productModel.Preco" Min="0" />
+                            <MudNumericField OnlyValidateIfDirty="false" Required="true" Label="Quantidade Disponivel" Variant="Variant.Filled" @bind-Value="productModel.QuantidadeDisponivel" Min="0" />
+                            <MudTextField OnlyValidateIfDirty="false" Required="true" Label="Codigo EAN" Variant="Variant.Filled" @bind-Value="productModel.CodigoEAN" />
 
                             <MudSelect @bind-Value="productModel.MarcaId" Variant="Variant.Filled" Placeholder="Seleciona uma marca" Label="Marca">
                                 @foreach (var marca in marcasModel)
@@ -98,17 +98,19 @@
         productModel.IsUpdated = DateTime.Now;
         productModel.IsDeleted = false;
 
-        try
+        var result = await WebApi.AddProduto(productModel);
+
+        if (result.IsSuccessStatusCode)
         {
-            var result = await WebApi.AddProduto(productModel);
             Console.WriteLine($"API Response: {result}");
             Snackbar.Add($"Produto \"{productModel.Nome}\" adicionado com sucesso", Severity.Success);
             await Task.Delay(1000);
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
-        catch (Exception ex)
+        else
         {
-            Snackbar.Add($"Erro {ex.Message}", Severity.Error);
+         var errorResult = await result.Content.ReadAsStringAsync();
+         Snackbar.Add($"{errorResult}", Severity.Error);
         }
     }
 
@@ -118,32 +120,37 @@
         saveCategoriasModel.PrecoMedio = 0;
         saveCategoriasModel.ProdutoCount = 0;
 
-        try
+        var result = await WebApi.AddCategoria(saveCategoriasModel);
+
+        if(result.IsSuccessStatusCode)
         {
-            var result = await WebApi.AddCategoria(saveCategoriasModel);
             Snackbar.Add($"Categoria \"{saveCategoriasModel.CategoriaNome}\" adicionada com sucesso", Severity.Success);
             await Task.Delay(1000);
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
-        catch (Exception ex)
+        else
         {
-            Snackbar.Add($"Erro {ex.Message}", Severity.Error);
+            var errorResult = await result.Content.ReadAsStringAsync();
+            Snackbar.Add($"{errorResult}", Severity.Error);
         }
+
     }
 
     private async Task SaveMarca()
     {
         saveMarcasModel.Id = 0;
-        try
+        var result = await WebApi.AddMarca(saveMarcasModel);
+
+        if(result.IsSuccessStatusCode)
         {
-            var result = await WebApi.AddMarca(saveMarcasModel);
             Snackbar.Add($"Marca \"{saveMarcasModel.NomeMarca}\" adicionada com sucesso", Severity.Success);
             await Task.Delay(1000);
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
-        catch (Exception ex)
+        else
         {
-            Snackbar.Add($"Erro {ex.Message}", Severity.Error);
+            var errorResult = await result.Content.ReadAsStringAsync();
+            Snackbar.Add($"{errorResult}", Severity.Error);
         }
     }
 

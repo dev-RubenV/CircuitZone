@@ -86,7 +86,7 @@ namespace CircuitZoneConsumerApi.Controllers
             var produtoExistente = await _businessContext.Produtos.FirstOrDefaultAsync(p => p.CodigoEAN.Equals(productModel.CodigoEAN));
 
             if (produto is not null)
-                return BadRequest();
+                return BadRequest("Produto já existe.");
 
             if (productModel.QuantidadeDisponivel < 0)
                 return BadRequest("Produto não pode ter stock negativo.");
@@ -113,10 +113,9 @@ namespace CircuitZoneConsumerApi.Controllers
 
             var result = await _businessContext.SaveChangesAsync();
 
-            if (result.Equals(1))
+            if (result > 0)
                 return Ok();
-
-            return BadRequest();
+            return BadRequest("Erro ao adicionar produto.");
         }
 
         [HttpPost("/adicionar-categoria")]
@@ -127,7 +126,7 @@ namespace CircuitZoneConsumerApi.Controllers
 
 
             if (categoria is not null)
-                return BadRequest();
+                return BadRequest("Categoria já existe");
 
             if (categoriaExistente is not null)
                 return BadRequest("Categoria com o mesmo nome já existe.");
@@ -139,9 +138,9 @@ namespace CircuitZoneConsumerApi.Controllers
 
             var result = await _businessContext.SaveChangesAsync();
 
-            if (result.Equals (1)) 
+            if (result > 0) 
                 return Ok();
-            return BadRequest();
+            return BadRequest("Erro ao adicionar categoria.");
         }
 
         [HttpPost("/adicionar-marca")]
@@ -152,7 +151,7 @@ namespace CircuitZoneConsumerApi.Controllers
 
 
             if (marca is not null)
-                return BadRequest();
+                return BadRequest("Marca já existe.");
 
             if (marcaExistente is not null)
                 return BadRequest("Marca com o mesmo nome já existe.");
@@ -164,9 +163,9 @@ namespace CircuitZoneConsumerApi.Controllers
 
             var result = await _businessContext.SaveChangesAsync();
 
-            if (result.Equals(1))
+            if (result > 0)
                 return Ok();
-            return BadRequest();
+            return BadRequest("Erro ao adicionar marca.");
         }
 
         [HttpPut("/editproduto")]
