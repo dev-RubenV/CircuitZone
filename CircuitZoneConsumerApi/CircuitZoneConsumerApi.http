@@ -1,0 +1,6 @@
+@CircuitZoneConsumerApi_HostAddress = http://localhost:5007
+
+GET {{CircuitZoneConsumerApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

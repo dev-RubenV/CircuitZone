@@ -1,35 +1,115 @@
 ﻿@inherits LayoutComponentBase
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
+@using CircuitZoneConsumerApi.Models
+<link rel="icon" type="image/x-icon" href="/circuitzone.ico"
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="MyCustomTheme"/>
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-<MudThemeProvider />
-
-<MudLayout>
-    <MudAppBar Elevation="1" Style="background-color: #212737; color: white;">
-        <img src="/Images/circuitzone_logo.svg"
-             style="height: 25px; width: auto; margin-left: 1rem;"
-             alt="CircuitZone Logo">
+<MudLayout Style="display: flex; flex-direction: column; height: 100vh;">
+    <MudAppBar Elevation="0">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
+        <MudImage src="@(_isDarkMode ? "/Images/circuitzone_logo.svg" : "/Images/circuitzone_logo_light.svg")" style="height: 28px; width: auto; margin-left: 1rem;"
+        alt="CircuitZone Logo"
+        @onclick="@(()=>NavigationManager.NavigateTo("/"))">
+        </MudImage>
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Filled.WbSunny" Color="@Color.Warning" ToggledColor="@Color.Secondary" />
+        <MudSwitch @bind-Value="@_isDarkMode" Color="Color.Primary" UncheckedColor="Color.Warning" />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Default" ToggledColor="@Color.Primary" />
+        <MudChip T="string" Color="Color.Primary">
+            <AvatarContent>
+                <MudAvatar>U</MudAvatar>
+            </AvatarContent>
+            <ChildContent>Hello, User!</ChildContent>
+        </MudChip>
     </MudAppBar>
-    <MudMainContent>
-        @*Body*@
-    </MudMainContent>
+    <MudPaper Elevation="25" Style="flex: 1; overflow: hidden; position: relative; padding-top: 64px;">
+        <MudDrawerContainer Class="mud-height-full">
+            <MudDrawer @bind-Open="@_open" Style="font-family: Lexend;" Fixed="true" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="false">
+                <MudNavMenu Class="custom-theme-active">
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.DataUsage">Dashboard</MudNavLink>
+                    <MudNavGroup Icon="@Icons.Material.Filled.Store" Title="Produtos" Expanded="true">
+                        <MudNavLink Href="/produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.ShoppingCart">
+                        <MudBadge Origin="Origin.CenterRight" Content="@_productCount" Color="Color.Primary" Overlap="false" Class="pr-2">
+                            Produtos
+                        </MudBadge>
+                    </MudNavLink>
+                        <MudNavLink Href="/adicionar-produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.AddToPhotos">Adicionar Produto</MudNavLink>
+                        <MudNavLink Href="/lixo-produtos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Delete">Lixo</MudNavLink>
+
+                    </MudNavGroup>
+                    <MudNavGroup Icon="@Icons.Material.Filled.TrendingUp" Title="Movimentos" Expanded="false">
+                        <MudNavLink Href="/entrada-stock" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.AddCircle">Entradas de Stock</MudNavLink>
+                        <MudNavLink Href="/saida-stock" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.RemoveCircle">Saídas de Stock</MudNavLink>
+                        <MudNavLink Href="/historico-movimentos" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.History">Histórico de Movimentos</MudNavLink>
+
+                    </MudNavGroup>
+                    <MudNavLink Href="/adduser" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Adicionar User</MudNavLink>
+
+
+                </MudNavMenu>
+            </MudDrawer>
+            <MudMainContent Class="scrollbar pb-4" Style="flex: 1; overflow: auto; height: 95vh;">
+                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+                    @Body
+                </MudContainer>
+            </MudMainContent>
+        </MudDrawerContainer>
+    </MudPaper>
 </MudLayout>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
+@code
+{
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    private int _productCount = 0;
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+    List<ProductModel> ProductItems { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ProductItems = await WebApi.GetProduto();
+
+        _productCount = ProductItems.Count();
+
+    }
+    
+    
+    private bool _isDarkMode = true;
+
+    private bool _open = true;
+
+    private void ToggleDrawer()
+    {
+        _open = !_open;
+    }
+
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            PaletteLight = new PaletteLight()
+            {
+                Primary = "#4d6bfe",
+                Secondary = "#abb2bd",
+                AppbarBackground = "#fcfcff",
+                DrawerBackground = "#fcfcff",
+                Surface = "#f6f6f6",
+                
+            },
+            PaletteDark = new PaletteDark()
+            {
+                Primary = "#4d6bfe",
+                Secondary = "#abb2bd",
+                AppbarBackground = "#212327",
+                DrawerText = "#abb2bd",
+                DrawerIcon = "#abb2bd",
+                DrawerBackground = "#212327",
+                Black = "#212327",
+                AppbarText = "#abb2bd",
+                TextPrimary = "#fcfcff",
+                Surface = "#292a2d",
+            }
+        };
+}

@@ -19,5 +19,8 @@ namespace CircuitZone.Entities
         public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; }
         public List<Imagem> Imagens { get; set; }
+        public DateTime IsCreated { get; set; }
+        public DateTime IsUpdated { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

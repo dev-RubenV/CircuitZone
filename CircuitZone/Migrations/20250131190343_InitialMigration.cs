@@ -15,7 +15,7 @@ namespace CircuitZone.Migrations
                 name: "Categorias",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -28,7 +28,7 @@ namespace CircuitZone.Migrations
                 name: "Marcas",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NomeMarca = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -41,7 +41,7 @@ namespace CircuitZone.Migrations
                 name: "TipoMovimentos",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -54,7 +54,7 @@ namespace CircuitZone.Migrations
                 name: "Utilizadores",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PrimeiroNome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UltimoNome = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -73,30 +73,28 @@ namespace CircuitZone.Migrations
                 name: "Produtos",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MarcaId = table.Column<int>(type: "int", nullable: false),
-                    MarcaId1 = table.Column<long>(type: "bigint", nullable: false),
                     Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CodigoEAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     QuantidadeDisponivel = table.Column<int>(type: "int", nullable: false),
-                    CategoriaId = table.Column<int>(type: "int", nullable: false),
-                    CategoriaId1 = table.Column<long>(type: "bigint", nullable: false)
+                    CategoriaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Produtos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Produtos_Categorias_CategoriaId1",
-                        column: x => x.CategoriaId1,
+                        name: "FK_Produtos_Categorias_CategoriaId",
+                        column: x => x.CategoriaId,
                         principalTable: "Categorias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Produtos_Marcas_MarcaId1",
-                        column: x => x.MarcaId1,
+                        name: "FK_Produtos_Marcas_MarcaId",
+                        column: x => x.MarcaId,
                         principalTable: "Marcas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -106,18 +104,17 @@ namespace CircuitZone.Migrations
                 name: "Imagens",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProdutoId = table.Column<int>(type: "int", nullable: false),
-                    ProdutoId1 = table.Column<long>(type: "bigint", nullable: false)
+                    ProdutoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Imagens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Imagens_Produtos_ProdutoId1",
-                        column: x => x.ProdutoId1,
+                        name: "FK_Imagens_Produtos_ProdutoId",
+                        column: x => x.ProdutoId,
                         principalTable: "Produtos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -127,69 +124,66 @@ namespace CircuitZone.Migrations
                 name: "Movimentos",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantidade = table.Column<int>(type: "int", nullable: false),
                     DataMovimento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TipoMovimentoId = table.Column<int>(type: "int", nullable: false),
-                    TipoMovimentoId1 = table.Column<long>(type: "bigint", nullable: false),
                     UtilizadorId = table.Column<int>(type: "int", nullable: false),
-                    UtilizadorId1 = table.Column<long>(type: "bigint", nullable: false),
-                    ProdutoId = table.Column<int>(type: "int", nullable: false),
-                    ProdutoId1 = table.Column<long>(type: "bigint", nullable: false)
+                    ProdutoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Movimentos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Movimentos_Produtos_ProdutoId1",
-                        column: x => x.ProdutoId1,
+                        name: "FK_Movimentos_Produtos_ProdutoId",
+                        column: x => x.ProdutoId,
                         principalTable: "Produtos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Movimentos_TipoMovimentos_TipoMovimentoId1",
-                        column: x => x.TipoMovimentoId1,
+                        name: "FK_Movimentos_TipoMovimentos_TipoMovimentoId",
+                        column: x => x.TipoMovimentoId,
                         principalTable: "TipoMovimentos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Movimentos_Utilizadores_UtilizadorId1",
-                        column: x => x.UtilizadorId1,
+                        name: "FK_Movimentos_Utilizadores_UtilizadorId",
+                        column: x => x.UtilizadorId,
                         principalTable: "Utilizadores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Imagens_ProdutoId1",
+                name: "IX_Imagens_ProdutoId",
                 table: "Imagens",
-                column: "ProdutoId1");
+                column: "ProdutoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movimentos_ProdutoId1",
+                name: "IX_Movimentos_ProdutoId",
                 table: "Movimentos",
-                column: "ProdutoId1");
+                column: "ProdutoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movimentos_TipoMovimentoId1",
+                name: "IX_Movimentos_TipoMovimentoId",
                 table: "Movimentos",
-                column: "TipoMovimentoId1");
+                column: "TipoMovimentoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movimentos_UtilizadorId1",
+                name: "IX_Movimentos_UtilizadorId",
                 table: "Movimentos",
-                column: "UtilizadorId1");
+                column: "UtilizadorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Produtos_CategoriaId1",
+                name: "IX_Produtos_CategoriaId",
                 table: "Produtos",
-                column: "CategoriaId1");
+                column: "CategoriaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Produtos_MarcaId1",
+                name: "IX_Produtos_MarcaId",
                 table: "Produtos",
-                column: "MarcaId1");
+                column: "MarcaId");
         }
 
         /// <inheritdoc />

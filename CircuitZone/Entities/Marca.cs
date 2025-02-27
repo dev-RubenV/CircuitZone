@@ -9,5 +9,7 @@ namespace CircuitZone.Entities
     public class Marca : BaseEntitity
     {
         public string NomeMarca { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }

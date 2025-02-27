@@ -1,11 +1,55 @@
 ﻿using Refit;
-using System.Net.Http.Headers;
+using CircuitZoneConsumerApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CircuitZoneWebApp
 {
-    //public interface IWebApi
-    //{
-    //    [Get("/getproducts")]
-    //    Task<List<ProductModel>> GetProducts(); // Mudar para correcto no futuro
-    //}
+    public interface IWebApi
+    {
+        [Get("/produtos")]
+        Task<List<ProductModel>> GetProduto();
+
+        [Get("/getproduto")]
+        Task<ProductModel> GetSingleProduct(int id);
+
+        [Get("/marcas")]
+        Task<List<MarcasModel>> GetMarcas();
+
+        [Get("/categorias")]
+        Task<List<CategoriasModel>> GetCategorias();
+
+        [Post("/adicionar-produto")]
+        Task<HttpResponseMessage> AddProduto([FromBody] ProductModel productModel);
+        
+        [Post("/adicionar-categoria")]
+        Task<HttpResponseMessage> AddCategoria([FromBody] CategoriasModel categoriaModel);
+
+        [Post("/adicionar-marca")]
+        Task<HttpResponseMessage> AddMarca([FromBody] MarcasModel marcaModel);
+
+        [Delete("/deleteproduto")]
+        Task<HttpResponseMessage> DeleteProduto(int id);
+        
+        [Put("/editproduto")]
+        Task<HttpResponseMessage> EditProduto([Body] ProductModel productModel);
+
+        [Get("/deleted-produtos")]
+        Task<List<ProductModel>> GetDeletedProduct();
+        
+        [Get("/getsingledeletedproduto")]
+        Task<ProductModel> GetSingleDeletedProduct(int id);
+        
+        [Post("/entrada-stock")]
+        Task<MovementsModel> AddStock(int productId, int quantity);
+        
+        [Post("/saida-stock")]
+        Task<MovementsModel> RemoveStock(int productId, int quantity);
+        
+        [Get("/get-movimentos")]
+        Task<List<MovementsModel>> GetMovimentos();
+
+        [Get("/get-movimento")]
+        Task<MovementsModel> GetSingleMovimento(int id);
+
+    }
 }
