@@ -49,28 +49,28 @@ namespace CircuitZoneConsumerApi.Controllers
             else
                 return Ok(productTable);
         }
-        
+
         [HttpGet("/getproduto")]
         public async Task<IActionResult> GetSingleProduct(int id)
         {
             var product = await _businessContext.Produtos
             .Where(p => p.IsDeleted == false && p.Id.Equals(id))
             .Select(p => new ProductModel
-                {
-                    Id = p.Id,
-                    Nome = p.Nome,
-                    Descricao = p.Descricao,
-                    Preco = p.Preco,
-                    CodigoEAN = p.CodigoEAN,
-                    QuantidadeDisponivel = p.QuantidadeDisponivel,
-                    MarcaNome = p.Marca.NomeMarca,
-                    CategoriaNome = p.Categoria.Nome,
-                    MarcaId = p.Marca.Id,
-                    CategoriaId = p.Categoria.Id,
-                    IsCreated = p.IsCreated,
-                    IsUpdated = p.IsUpdated,
-                    ImagensUrls = p.Imagens.Select(p => p.Url).ToList(),
-                })
+            {
+                Id = p.Id,
+                Nome = p.Nome,
+                Descricao = p.Descricao,
+                Preco = p.Preco,
+                CodigoEAN = p.CodigoEAN,
+                QuantidadeDisponivel = p.QuantidadeDisponivel,
+                MarcaNome = p.Marca.NomeMarca,
+                CategoriaNome = p.Categoria.Nome,
+                MarcaId = p.Marca.Id,
+                CategoriaId = p.Categoria.Id,
+                IsCreated = p.IsCreated,
+                IsUpdated = p.IsUpdated,
+                ImagensUrls = p.Imagens.Select(p => p.Url).ToList(),
+            })
                 .FirstOrDefaultAsync();
 
             if (product is null)
@@ -116,6 +116,56 @@ namespace CircuitZoneConsumerApi.Controllers
             if (result.Equals(1))
                 return Ok();
 
+            return BadRequest();
+        }
+
+        [HttpPost("/adicionar-categoria")]
+        public async Task<IActionResult> AddCategoria(CategoriasModel categoriaModel)
+        {
+            var categoria = await _businessContext.Categorias.FirstOrDefaultAsync(c => c.Id.Equals(categoriaModel.Id));
+            var categoriaExistente = await _businessContext.Categorias.FirstOrDefaultAsync(c => c.Nome.Equals(categoriaModel.CategoriaNome));
+
+
+            if (categoria is not null)
+                return BadRequest();
+
+            if (categoriaExistente is not null)
+                return BadRequest("Categoria com o mesmo nome já existe.");
+
+            var newCategoria = new Categoria();
+            newCategoria.Nome = categoriaModel.CategoriaNome;
+
+            _businessContext.Categorias.Add(newCategoria);
+
+            var result = await _businessContext.SaveChangesAsync();
+
+            if (result.Equals (1)) 
+                return Ok();
+            return BadRequest();
+        }
+
+        [HttpPost("/adicionar-marca")]
+        public async Task<IActionResult> AddMarca(MarcasModel marcaModel)
+        {
+            var marca = await _businessContext.Marcas.FirstOrDefaultAsync(m => m.Id.Equals(marcaModel.Id));
+            var marcaExistente = await _businessContext.Marcas.FirstOrDefaultAsync(m => m.NomeMarca.Equals(marcaModel.NomeMarca));
+
+
+            if (marca is not null)
+                return BadRequest();
+
+            if (marcaExistente is not null)
+                return BadRequest("Marca com o mesmo nome já existe.");
+
+            var newMarca = new Marca();
+            newMarca.NomeMarca = marcaModel.NomeMarca;
+
+            _businessContext.Marcas.Add(newMarca);
+
+            var result = await _businessContext.SaveChangesAsync();
+
+            if (result.Equals(1))
+                return Ok();
             return BadRequest();
         }
 

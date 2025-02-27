@@ -47,7 +47,7 @@
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd DataLabel="Id">@context.Id</MudTd>
-                        <MudTd DataLabel="Nome">@context.Nome</MudTd>
+                        <MudTd DataLabel="Nome">@(context.Nome.Length > 80 ? $"{string.Concat(context.Nome.Take(80))}..." : context.Nome)</MudTd>
                         <MudTd DataLabel="Marca">@context.MarcaNome</MudTd>
                         <MudTd DataLabel="Stock">@context.QuantidadeDisponivel</MudTd>
                         <MudTd DataLabel="CreatedAt">@context.IsCreated.ToString("dd/MM/yyyy - HH:mm")h</MudTd>
@@ -82,7 +82,7 @@
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd DataLabel="Id">@context.Id</MudTd>
-                        <MudTd DataLabel="Nome">@context.Nome</MudTd>
+                        <MudTd DataLabel="Nome">@(context.Nome.Length > 80 ? $"{string.Concat(context.Nome.Take(80))}..." : context.Nome)</MudTd>
                         <MudTd DataLabel="Marca">@context.CategoriaNome</MudTd>
                         <MudTd DataLabel="Marca">@context.MarcaNome</MudTd>
                         <MudTd DataLabel="Stock"><p style="color:@(context.QuantidadeDisponivel == 0 ? "#c70e33" : "#fcba03")">@context.QuantidadeDisponivel</p></MudTd>

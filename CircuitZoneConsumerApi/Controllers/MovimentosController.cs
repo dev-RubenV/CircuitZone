@@ -18,6 +18,60 @@ namespace CircuitZoneConsumerApi.Controllers
             _businessContext = businessContext;
         }
 
+        [HttpGet("/get-movimentos")]
+        public async Task<IActionResult> GetMovimentos()
+        {
+            var movimentosTable = await _businessContext.Movimentos.Select( m => new MovementsModel
+            {
+                Id = m.Id,
+                Quantidade = m.Quantidade,
+                DataMovimento = m.DataMovimento,
+                TipoMovimento = m.TipoMovimento.Tipo,
+                TipoMovimentoId = m.TipoMovimentoId,
+                ProdutoNome = m.Produto.Nome,
+                ProdutoDescricao = m.Produto.Descricao,
+                ProdutoId = m.ProdutoId,
+                ProdutoPreco = m.Produto.Preco,
+                ImagemThumbnail = m.Produto.Imagens.Any() ? m.Produto.Imagens.Select(m => m.Url).FirstOrDefault().ToString()
+                                  : "/Images/no-image.png",
+
+                MovimentoTotal = m.Quantidade * m.Produto.Preco,
+            }
+                ).ToListAsync();
+
+            if (!movimentosTable.Any())
+                return NotFound();
+            return Ok(movimentosTable);
+        }
+
+        [HttpGet("/get-movimento")]
+        public async Task<IActionResult> GetSingleMovimento(int id)
+        {
+            var movimentosTable = await _businessContext.Movimentos.Where(m => m.Id.Equals(id))
+                .Select(m => new MovementsModel
+            {
+                Id = m.Id,
+                Quantidade = m.Quantidade,
+                DataMovimento = m.DataMovimento,
+                TipoMovimento = m.TipoMovimento.Tipo,
+                TipoMovimentoId = m.TipoMovimentoId,
+                ProdutoNome = m.Produto.Nome,
+                ProdutoDescricao = m.Produto.Descricao,
+                ProdutoId = m.ProdutoId,
+                ProdutoPreco = m.Produto.Preco,
+                ImagemThumbnail = m.Produto.Imagens.Any() ? m.Produto.Imagens.Select(m => m.Url).FirstOrDefault().ToString()
+                                  : "/Images/no-image.png",
+
+                MovimentoTotal = m.Quantidade * m.Produto.Preco,
+            }
+                ).FirstOrDefaultAsync();
+
+            if (movimentosTable is null)
+                return NotFound();
+            return Ok(movimentosTable);
+        }
+
+
         [HttpPost("/entrada-stock")]
         public async Task<IActionResult> AddStock(int productId, int quantity)
         {
@@ -58,7 +112,7 @@ namespace CircuitZoneConsumerApi.Controllers
         {
             var produto = await _businessContext.Produtos.FirstOrDefaultAsync(p => p.Id.Equals(productId));
 
-            if (quantity == 0)
+            if (quantity <= 0)
             {
                 return BadRequest($"Selecione um valor superior a zero.");
             }
